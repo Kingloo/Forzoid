@@ -1,19 +1,22 @@
 using System;
+using System.Net;
 
 namespace Forzoid.Data
 {
     public class Packet
     {
+        public IPEndPoint EndPoint { get; }
         public Game Game { get; } = Game.None;
         public Sled Sled { get; set; }
         public Dash Dash { get; set; }
 
-        public Packet(Game game)
+        public Packet(Game game, IPEndPoint endPoint)
         {
             Game = game;
+            EndPoint = endPoint;
         }
 
-        public static bool TryCreate(ReadOnlySpan<byte> data, out Packet packet)
+        public static bool TryCreate(ReadOnlySpan<byte> data, IPEndPoint endPoint, out Packet packet)
         {
             Game game = DataHelpers.DetermineGame(data);
 
@@ -22,14 +25,14 @@ namespace Forzoid.Data
             switch (game)
             {
                 case Game.ForzaHorizon4:
-                    packet = new Packet(Game.ForzaHorizon4)
+                    packet = new Packet(Game.ForzaHorizon4, endPoint)
                     {
                         Sled = Sled.Create(adjusted),
                         Dash = Dash.Create(adjusted)
                     };
                     return true;
                 case Game.ForzaMotorsport7:
-                    packet = new Packet(Game.ForzaMotorsport7)
+                    packet = new Packet(Game.ForzaMotorsport7, endPoint)
                     {
                         Sled = Sled.Create(adjusted),
                         Dash = Dash.Create(adjusted)
