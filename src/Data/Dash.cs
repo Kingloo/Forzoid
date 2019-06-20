@@ -71,6 +71,17 @@ namespace Forzoid.Data
             packet.CurrentLap = ToSingle(data.Slice(292, sizeof(float)));
             packet.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
 
+            /*
+            per the ForzaMotorsport.net forums, LapNumber is a ushort that reports lap 1 as lap 0
+            however!
+            we can't just '+ 1' as '+' only works on ints
+            so we extract it as a ushort then convert it to int - this is why the LapNumber property is an int instead of a ushort
+            however!
+            when a race starts, before you have crossed the start/finish line for the first time
+            the game UI will say 'laps 0/3'
+            the way we do it here it will already say 'laps 1/3'
+            */
+
             ushort lapNumber = ToUInt16(data.Slice(300, sizeof(ushort)));
 
             packet.LapNumber = Convert.ToInt32(lapNumber) + 1;
