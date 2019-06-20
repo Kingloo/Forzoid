@@ -15,6 +15,8 @@ namespace Forzoid.Data
                     return Game.ForzaHorizon4;
                 // case xxx:
                 //     return Game.ForzaMotorsport7;
+                case 0:
+                    return Game.None;
                 default:
                     return Game.Unknown;
             }
