@@ -83,7 +83,7 @@ namespace Forzoid.Data
 
         public Sled() { }
 
-        public static Sled Create(ReadOnlySpan<byte> data)
+        public static Sled Create(ReadOnlyMemory<byte> memory)
         {
             // Future: C# 8.0 range operator
             //    span[0..sizeof(int)]
@@ -91,10 +91,12 @@ namespace Forzoid.Data
             //    span[8..sizeof(float)]
             // etc...
 
-            if (data.Length == 0)
+            if (memory.Length == 0)
             {
                 return null;
             }
+
+            ReadOnlySpan<byte> data = memory.Span;
 
             Sled packet = new Sled();
 
@@ -173,11 +175,6 @@ namespace Forzoid.Data
             packet.NumCylinders = ToInt32(data.Slice(228, sizeof(int)));
 
             return packet;
-        }
-
-        public override string ToString()
-        {
-            return $"isRaceOn: {IsRaceOn}, current rpm: {CurrentEngineRpm.ToString("0.0000")}";
         }
     }
 }

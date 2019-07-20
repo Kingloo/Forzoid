@@ -41,12 +41,14 @@ namespace Forzoid.Data
 
         public Dash() { }
 
-        public static Dash Create(ReadOnlySpan<byte> data)
+        public static Dash Create(ReadOnlyMemory<byte> memory)
         {
-            if (data.Length == 0)
+            if (memory.Length == 0)
             {
                 return null;
             }
+
+            ReadOnlySpan<byte> data = memory.Span;
 
             Dash packet = new Dash();
 
@@ -72,14 +74,18 @@ namespace Forzoid.Data
             packet.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
 
             /*
-            per the ForzaMotorsport.net forums, LapNumber is a ushort that reports lap 1 as lap 0
-            however!
-            we can't just '+ 1' as '+' only works on ints
-            so we extract it as a ushort then convert it to int - this is why the LapNumber property is an int instead of a ushort
-            however!
-            when a race starts, before you have crossed the start/finish line for the first time
-            the game UI will say 'laps 0/3'
-            the way we do it here it will already say 'laps 1/3'
+                per the ForzaMotorsport.net forums, LapNumber is a ushort that reports lap 1 as lap 0
+                
+                HOWEVER!
+
+                we can't just '+ 1' as '+' only works on ints
+                so we extract it as a ushort then convert it to int - this is why the LapNumber property is an int instead of a ushort
+                
+                HOWEVER!
+
+                when a race starts, before you have crossed the start/finish line
+                the in-game UI will say 'laps 0/3'
+                the way we do it here it will already say 'laps 1/3'
             */
 
             ushort lapNumber = ToUInt16(data.Slice(300, sizeof(ushort)));
@@ -98,11 +104,6 @@ namespace Forzoid.Data
             packet.NormalizedAIBrakeDifference = (sbyte)data[310];
 
             return packet;
-        }
-
-        public override string ToString()
-        {
-            return $"lap: {LapNumber}, position: {RacePosition}, speed {Speed}, gear: {Gear}";
         }
     }
 }

@@ -6,45 +6,37 @@ namespace Forzoid.Data
     public class Packet
     {
         public IPEndPoint EndPoint { get; }
-        public Game Game { get; } = Game.None;
+        public Game Game { get; set; } = Game.None;
         public Sled Sled { get; set; }
         public Dash Dash { get; set; }
 
+        public Packet(IPEndPoint endPoint)
+            : this(Game.None, endPoint) { }
+        
         public Packet(Game game, IPEndPoint endPoint)
         {
             Game = game;
-            EndPoint = endPoint;
+            EndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
         }
 
-        public static bool TryCreate(ReadOnlySpan<byte> data, IPEndPoint endPoint, out Packet packet)
+        public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, out Packet packet)
         {
             Game game = DataHelpers.DetermineGame(data);
 
-            ReadOnlySpan<byte> adjusted = Prepare(data, game);
-            
-            switch (game)
+            ReadOnlyMemory<byte> adjusted = Prepare(data, game);
+
+            if (Sled.Create(adjusted) is Sled sled
+                && Dash.Create(adjusted) is Dash dash)
             {
-                case Game.ForzaHorizon4:
-                    packet = new Packet(Game.ForzaHorizon4, endPoint)
-                    {
-                        Sled = Sled.Create(adjusted),
-                        Dash = Dash.Create(adjusted)
-                    };
-                    return true;
-                case Game.ForzaMotorsport7:
-                    packet = new Packet(Game.ForzaMotorsport7, endPoint)
-                    {
-                        Sled = Sled.Create(adjusted),
-                        Dash = Dash.Create(adjusted)
-                    };
-                    return true;
-                default:
-                    packet = null;
-                    return false;
+                packet = new Packet(game, endPoint);
+                return true;    
             }
+
+            packet = null;
+            return false;
         }
 
-        private static ReadOnlySpan<byte> Prepare(ReadOnlySpan<byte> data, Game game)
+        private static ReadOnlyMemory<byte> Prepare(ReadOnlyMemory<byte> data, Game game)
         {
             switch (game)
             {
@@ -53,18 +45,18 @@ namespace Forzoid.Data
                 case Game.ForzaMotorsport7:
                     return PrepareForForzaMotorsport7(data);
                 default:
-                    return ReadOnlySpan<byte>.Empty;
+                    return ReadOnlyMemory<byte>.Empty;
             }
         }
 
-        private static ReadOnlySpan<byte> PrepareForForzaMotorsport7(ReadOnlySpan<byte> data)
+        private static ReadOnlyMemory<byte> PrepareForForzaMotorsport7(ReadOnlyMemory<byte> data)
         {
             // a Forza Motorsport 7 packet is contiguous, no unknown data and no gaps
 
             return data;
         }
 
-        private static ReadOnlySpan<byte> PrepareForForzaHorizon4(ReadOnlySpan<byte> data)
+        private static ReadOnlyMemory<byte> PrepareForForzaHorizon4(ReadOnlyMemory<byte> data)
         {
             /*
             
@@ -98,12 +90,7 @@ namespace Forzoid.Data
             // third argument is fm7SledLength because we put 232 bytes into contiguous starting at index 0
             // so the 232nd byte is in position 231, so the copy should start copying the next data as of index 232
 
-            return contiguous.AsSpan();
-        }
-
-        public override string ToString()
-        {
-            return $"{Game.ToString()}: {(Sled?.ToString() ?? "sled empty")} - {(Dash?.ToString() ?? "dash empty")}";
+            return contiguous.AsMemory();
         }
     }
 }

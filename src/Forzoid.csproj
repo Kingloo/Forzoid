@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LangVersion>7.3</LangVersion>
+    <!-- .NET Standard 2.1 supports everything we need, but it isn't done yet (2019.07.20), .NET Core 2.2 has what we need -->
+    <!-- <TargetFramework>netstandard2.1</TargetFramework> -->
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
 </Project>

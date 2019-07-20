@@ -1,36 +1,58 @@
 ﻿using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Forzoid;
+using Forzoid.Data;
 
 namespace Sample
 {
     public static class Program
     {
-        private static int listenPort = 50120;
-        
-        public static int Main(string[] args)
+        private static int listenPort = DataListener.DefaultPort;
+
+        public static async Task<int> Main(string[] args)
         {
+            /*
+                dotnet run 1234
+                    or
+                dotnet Sample.dll 1234
+                    or
+                Sample.exe 1234
+            */
+
             if (TrySetPortNumber(args, out int port))
             {
                 listenPort = port;
             }
 
-            using (DataListener listener = new DataListener())
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, listenPort);
+
+            using (DataListener listener = new DataListener(endPoint))
+            using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
+                bool keepListening = true;
+
                 Console.CancelKeyPress += (s, e) =>
                 {
                     Console.WriteLine("exiting...");
 
-                    listener.Stop();
+                    keepListening = false;
+
+                    tokenSource.Cancel();
                 };
 
-                listener.DataReceived += (s, e) =>
+                Console.WriteLine($"begin listening asyncly for data on port {listenPort}");
+
+                while (keepListening)
                 {
-                    Console.WriteLine($"{e.Packet.EndPoint.Address}:{e.Packet.EndPoint.Port} - {e.Packet.ToString()}");
-                };
+                    ReadOnlyMemory<byte> rawData = await listener.ListenAsync(tokenSource.Token);
 
-                Console.WriteLine($"begin listening for data on port {listenPort}");
-
-                listener.Listen();
+                    if (Packet.TryCreate(rawData, endPoint, out Packet packet))
+                    {
+                        Console.WriteLine($"{packet.EndPoint.Address}:{packet.EndPoint.Port} - {packet.ToString()}");
+                    }
+                }
             }
 
             return 0;

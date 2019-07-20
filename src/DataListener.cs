@@ -1,77 +1,58 @@
 using System;
+using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Forzoid.Data;
+using System.Threading.Tasks;
 
 namespace Forzoid
 {
     public class DataListener : IDisposable
     {
-        public event EventHandler<DataReceivedEventArgs> DataReceived;
-        private void OnDataReceived(Packet packet)
-        {
-            DataReceived?.Invoke(this, new DataReceivedEventArgs(packet));
-        }
-
-        private const int defaultPort = 50120;
+        private const int minPort = 1024;
+        
+        private const int _defaultPort = 50120;
+        public static int DefaultPort => _defaultPort;
+        
         private readonly UdpClient udpClient = null;
-        private bool keepListening = false;
         
         public DataListener()
-            : this(IPAddress.Any, defaultPort)
+            : this(new IPEndPoint(IPAddress.Any, _defaultPort))
         { }
 
         public DataListener(int port)
-            : this(IPAddress.Any, port)
+            : this(new IPEndPoint(IPAddress.Any, port))
         { }
 
-        public DataListener(IPAddress ipAddress, int port)
+        public DataListener(IPEndPoint endPoint)
         {
-            if (port < 1024 || port > 65535)
+            if (endPoint.Port < minPort)
             {
-                throw new ArgumentOutOfRangeException(nameof(port), $"port ({port}) must be between 1024 and 65535");
+                string message = string.Format(CultureInfo.CurrentCulture, "port cannot be less than {0}, was {1}", minPort, endPoint.Port);
+
+                throw new ArgumentOutOfRangeException(nameof(endPoint), message);
             }
 
-            udpClient = new UdpClient(new IPEndPoint(ipAddress, port));
+            udpClient = new UdpClient(endPoint);
         }
 
-        public void Listen()
+        public async Task<ReadOnlyMemory<byte>> ListenAsync(CancellationToken token)
         {
-            keepListening = true;
-
-            udpClient.Client.ReceiveTimeout = 1000 * 60; // 1000ms * 60 => 1 minute
-
-            IPEndPoint sender = null;
-
             try
             {
-                while (keepListening)
-                {
-                    if (udpClient.Available > 0)
-                    {
-                        ReadOnlySpan<byte> span = udpClient.Receive(ref sender);
+                Task<UdpReceiveResult> task = Task.Run(udpClient.ReceiveAsync, token);
+            
+                UdpReceiveResult result = await task.ConfigureAwait(false);
+                
+                // .ReceiveAsync can throw SocketException
+                // this is intentionally left to the consumer to deal with
 
-                        if (Packet.TryCreate(span, sender, out Packet packet))
-                        {
-                            OnDataReceived(packet);
-                        }
-                    }
-
-                    // the game only sends packets every 1/60th of a second (aka once every 16ms)
-                    // so there is no point in looping any faster than this
-                    Thread.Sleep(16);
-                }
+                return new ReadOnlyMemory<byte>(result.Buffer);
             }
-            catch (SocketException)
+            catch (TaskCanceledException)
             {
-                Console.Error.WriteLine("client timed out");
+                return ReadOnlyMemory<byte>.Empty;
             }
-        }
-
-        public void Stop()
-        {
-            keepListening = false;
         }
 
         private bool disposedValue = false;
