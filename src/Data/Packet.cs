@@ -11,7 +11,8 @@ namespace Forzoid.Data
         public Dash Dash { get; set; }
 
         public Packet(IPEndPoint endPoint)
-            : this(Game.None, endPoint) { }
+            : this(Game.None, endPoint)
+        { }
         
         public Packet(Game game, IPEndPoint endPoint)
         {
@@ -27,9 +28,9 @@ namespace Forzoid.Data
                 return false;
             }
 
-            Game game = DataHelpers.DetermineGame(data);
+            Game game = DataHelpers.DetermineGame(data.Span);
 
-            ReadOnlyMemory<byte> adjusted = Prepare(data, game);
+            ReadOnlySpan<byte> adjusted = Prepare(game, data.Span);
 
             if (Sled.Create(adjusted) is Sled sled
                 && Dash.Create(adjusted) is Dash dash)
@@ -42,7 +43,7 @@ namespace Forzoid.Data
             return false;
         }
 
-        private static ReadOnlyMemory<byte> Prepare(ReadOnlyMemory<byte> data, Game game)
+        private static ReadOnlySpan<byte> Prepare(Game game, ReadOnlySpan<byte> data)
         {
             switch (game)
             {
@@ -51,18 +52,18 @@ namespace Forzoid.Data
                 case Game.ForzaMotorsport7:
                     return PrepareForForzaMotorsport7(data);
                 default:
-                    return ReadOnlyMemory<byte>.Empty;
+                    return ReadOnlySpan<byte>.Empty;
             }
         }
 
-        private static ReadOnlyMemory<byte> PrepareForForzaMotorsport7(ReadOnlyMemory<byte> data)
+        private static ReadOnlySpan<byte> PrepareForForzaMotorsport7(ReadOnlySpan<byte> data)
         {
             // a Forza Motorsport 7 packet is contiguous, no unknown data and no gaps
 
             return data;
         }
 
-        private static ReadOnlyMemory<byte> PrepareForForzaHorizon4(ReadOnlyMemory<byte> data)
+        private static ReadOnlySpan<byte> PrepareForForzaHorizon4(ReadOnlySpan<byte> data)
         {
             /*
             
@@ -96,7 +97,7 @@ namespace Forzoid.Data
             // third argument is fm7SledLength because we put 232 bytes into contiguous starting at index 0
             // so the 232nd byte is in position 231, so the copy should start copying the next data as of index 232
 
-            return contiguous.AsMemory();
+            return contiguous.AsSpan();
         }
     }
 }

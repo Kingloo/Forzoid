@@ -5,9 +5,9 @@ namespace Forzoid.Data
     public static class DataHelpers
     {
         public static Game DetermineGame(byte[] packet)
-            => DetermineGame(packet.AsMemory());
+            => DetermineGame(packet.AsSpan());
 
-        public static Game DetermineGame(ReadOnlyMemory<byte> packet)
+        public static Game DetermineGame(ReadOnlySpan<byte> packet)
         {
             switch (packet.Length)
             {

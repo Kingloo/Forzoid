@@ -41,14 +41,12 @@ namespace Forzoid.Data
 
         public Dash() { }
 
-        public static Dash Create(ReadOnlyMemory<byte> memory)
+        public static Dash Create(ReadOnlySpan<byte> data)
         {
-            if (memory.Length == 0)
+            if (data.Length == 0)
             {
                 return null;
             }
-
-            ReadOnlySpan<byte> data = memory.Span;
 
             Dash packet = new Dash();
 

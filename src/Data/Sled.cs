@@ -83,7 +83,7 @@ namespace Forzoid.Data
 
         public Sled() { }
 
-        public static Sled Create(ReadOnlyMemory<byte> memory)
+        public static Sled Create(ReadOnlySpan<byte> data)
         {
             // Future: C# 8.0 range operator
             //    span[0..sizeof(int)]
@@ -91,12 +91,10 @@ namespace Forzoid.Data
             //    span[8..sizeof(float)]
             // etc...
 
-            if (memory.Length == 0)
+            if (data.Length == 0)
             {
                 return null;
             }
-
-            ReadOnlySpan<byte> data = memory.Span;
 
             Sled packet = new Sled();
 
