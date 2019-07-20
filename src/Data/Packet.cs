@@ -21,6 +21,12 @@ namespace Forzoid.Data
 
         public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, out Packet packet)
         {
+            if (data.Length == 0)
+            {
+                packet = null;
+                return false;
+            }
+
             Game game = DataHelpers.DetermineGame(data);
 
             ReadOnlyMemory<byte> adjusted = Prepare(data, game);
