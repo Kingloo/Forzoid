@@ -19,6 +19,8 @@ namespace Sample
                 dotnet Sample.dll 1234
                     or
                 Sample.exe 1234
+
+                depending on how you build/publish
             */
 
             if (TrySetPortNumber(args, out int port))
@@ -31,21 +33,22 @@ namespace Sample
             using (DataListener listener = new DataListener(endPoint))
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
             {
-                bool keepListening = true;
-
                 Console.CancelKeyPress += (s, e) =>
                 {
                     Console.WriteLine("exiting...");
-
-                    keepListening = false;
 
                     tokenSource.Cancel();
                 };
 
                 Console.WriteLine($"begin listening asyncly for data on port {listenPort}");
 
-                while (keepListening)
+                while (true)
                 {
+                    if (tokenSource.IsCancellationRequested)
+                    {
+                        break;
+                    }
+                    
                     ReadOnlyMemory<byte> rawData = await listener.ListenAsync(tokenSource.Token);
 
                     if (Packet.TryCreate(rawData, endPoint, out Packet packet))
