@@ -3,8 +3,8 @@ namespace Forzoid.Data
     public enum DrivetrainType
     {
         None,
-        RWD,
         FWD,
+        RWD,
         AWD,
         Unknown
     }
