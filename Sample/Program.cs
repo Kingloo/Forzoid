@@ -53,7 +53,7 @@ namespace Sample
 
                     if (Packet.TryCreate(rawData, endPoint, out Packet packet))
                     {
-                        string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - {packet.Game} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber}";
+                        string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - tire temp: {packet.Dash.TireTempFrontRight} - cur. race time: {packet.Dash.CurrentRaceTime}";
 
                         Console.WriteLine(message);
                     }

@@ -30,12 +30,24 @@ namespace Forzoid.Data
         public float Boost { get; set; } = 0f;
         public float Fuel { get; set; } = 0f;
         public float DistanceTraveled { get; set; } = 0f;
+        /// <summary>
+        /// In seconds
+        /// </summary>
         public float BestLap { get; set; } = 0f;
+        /// <summary>
+        /// In seconds
+        /// </summary>
         public float LastLap { get; set; } = 0f;
+        /// <summary>
+        /// In seconds
+        /// </summary>
         public float CurrentLap { get; set; } = 0f;
+        /// <summary>
+        /// In seconds
+        /// </summary>
         public float CurrentRaceTime { get; set; } = 0f;
 
-        public int LapNumber { get; set; } = 0; // in docu. this is ushort
+        public int LapNumber { get; set; } = 0;
         public int RacePosition { get; set; } = 0;
 
         public int Accel { get; set; } = 0;
@@ -98,17 +110,17 @@ namespace Forzoid.Data
             ushort lapNumber = ToUInt16(data.Slice(300, sizeof(ushort)));
 
             dash.LapNumber = Convert.ToInt32(lapNumber) + 1;
-            dash.RacePosition = ToInt32(data.Slice(302, sizeof(byte)));
+            dash.RacePosition = (int)data[302];
 
-            dash.Accel = ToInt32(data.Slice(303, sizeof(byte)));
-            dash.Brake = ToInt32(data.Slice(304, sizeof(byte)));
-            dash.Clutch = ToInt32(data.Slice(305, sizeof(byte)));
-            dash.HandBrake = ToInt32(data.Slice(306, sizeof(byte)));
-            dash.Gear = ToInt32(data.Slice(307, sizeof(byte)));
-            dash.Steer = ToInt32(data.Slice(308, sizeof(sbyte)));
+            dash.Accel = (int)data[303];
+            dash.Brake = (int)data[304];
+            dash.Clutch = (int)data[305];
+            dash.HandBrake = (int)data[306];
+            dash.Gear = (int)data[307];
+            dash.Steer = (int)data[308];
 
-            dash.NormalizedDrivingLine = ToInt32(data.Slice(309, sizeof(sbyte)));
-            dash.NormalizedAIBrakeDifference = ToInt32(data.Slice(310, sizeof(sbyte)));
+            dash.NormalizedDrivingLine = (int)data[309];
+            dash.NormalizedAIBrakeDifference = (int)data[310];
 
             return dash;
         }
