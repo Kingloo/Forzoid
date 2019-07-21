@@ -69,6 +69,7 @@ namespace Forzoid
                 disposedValue = true;
             }
         }
+        
         public void Dispose()
         {
             Dispose(true);
