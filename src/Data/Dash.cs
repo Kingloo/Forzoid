@@ -48,28 +48,28 @@ namespace Forzoid.Data
                 return null;
             }
 
-            Dash packet = new Dash();
+            Dash dash = new Dash();
 
-            packet.PositionX = ToSingle(data.Slice(232, sizeof(float)));
-            packet.PositionY = ToSingle(data.Slice(236, sizeof(float)));
-            packet.PositionZ = ToSingle(data.Slice(240, sizeof(float)));
+            dash.PositionX = ToSingle(data.Slice(232, sizeof(float)));
+            dash.PositionY = ToSingle(data.Slice(236, sizeof(float)));
+            dash.PositionZ = ToSingle(data.Slice(240, sizeof(float)));
 
-            packet.Speed = ToSingle(data.Slice(244, sizeof(float)));
-            packet.Power = ToSingle(data.Slice(248, sizeof(float)));
-            packet.Torque = ToSingle(data.Slice(252, sizeof(float)));
+            dash.Speed = ToSingle(data.Slice(244, sizeof(float)));
+            dash.Power = ToSingle(data.Slice(248, sizeof(float)));
+            dash.Torque = ToSingle(data.Slice(252, sizeof(float)));
 
-            packet.TireTempFrontLeft = ToSingle(data.Slice(256, sizeof(float)));
-            packet.TireTempFrontRight = ToSingle(data.Slice(260, sizeof(float)));
-            packet.TireTempRearLeft = ToSingle(data.Slice(264, sizeof(float)));
-            packet.TireTempRearRight = ToSingle(data.Slice(268, sizeof(float)));
+            dash.TireTempFrontLeft = ToSingle(data.Slice(256, sizeof(float)));
+            dash.TireTempFrontRight = ToSingle(data.Slice(260, sizeof(float)));
+            dash.TireTempRearLeft = ToSingle(data.Slice(264, sizeof(float)));
+            dash.TireTempRearRight = ToSingle(data.Slice(268, sizeof(float)));
 
-            packet.Boost = ToSingle(data.Slice(272, sizeof(float)));
-            packet.Fuel = ToSingle(data.Slice(276, sizeof(float)));
-            packet.DistanceTraveled = ToSingle(data.Slice(280, sizeof(float)));
-            packet.BestLap = ToSingle(data.Slice(284, sizeof(float)));
-            packet.LastLap = ToSingle(data.Slice(288, sizeof(float)));
-            packet.CurrentLap = ToSingle(data.Slice(292, sizeof(float)));
-            packet.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
+            dash.Boost = ToSingle(data.Slice(272, sizeof(float)));
+            dash.Fuel = ToSingle(data.Slice(276, sizeof(float)));
+            dash.DistanceTraveled = ToSingle(data.Slice(280, sizeof(float)));
+            dash.BestLap = ToSingle(data.Slice(284, sizeof(float)));
+            dash.LastLap = ToSingle(data.Slice(288, sizeof(float)));
+            dash.CurrentLap = ToSingle(data.Slice(292, sizeof(float)));
+            dash.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
 
             /*
                 per the ForzaMotorsport.net forums, LapNumber is a ushort that reports lap 1 as lap 0
@@ -88,20 +88,20 @@ namespace Forzoid.Data
 
             ushort lapNumber = ToUInt16(data.Slice(300, sizeof(ushort)));
 
-            packet.LapNumber = Convert.ToInt32(lapNumber) + 1;
-            packet.RacePosition = data[302];
+            dash.LapNumber = Convert.ToInt32(lapNumber) + 1;
+            dash.RacePosition = data[302];
 
-            packet.Accel = data[303];
-            packet.Brake = data[304];
-            packet.Clutch = data[305];
-            packet.HandBrake = data[306];
-            packet.Gear = data[307];
-            packet.Steer = (sbyte)data[308];
+            dash.Accel = data[303];
+            dash.Brake = data[304];
+            dash.Clutch = data[305];
+            dash.HandBrake = data[306];
+            dash.Gear = data[307];
+            dash.Steer = (sbyte)data[308];
 
-            packet.NormalizedDrivingLine = (sbyte)data[309];
-            packet.NormalizedAIBrakeDifference = (sbyte)data[310];
+            dash.NormalizedDrivingLine = (sbyte)data[309];
+            dash.NormalizedAIBrakeDifference = (sbyte)data[310];
 
-            return packet;
+            return dash;
         }
     }
 }
