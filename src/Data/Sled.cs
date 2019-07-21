@@ -28,56 +28,173 @@ namespace Forzoid.Data
         public float Yaw { get; set; } = 0f;
         public float Pitch { get; set; } = 0f;
         public float Roll { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Suspension travel normalized: 0.0f = max stretch; 1.0 = max compression
+        /// </summary>
         public float NormalizedSuspensionTravelFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Suspension travel normalized: 0.0f = max stretch; 1.0 = max compression
+        /// </summary>
         public float NormalizedSuspensionTravelFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Suspension travel normalized: 0.0f = max stretch; 1.0 = max compression
+        /// </summary>
         public float NormalizedSuspensionTravelRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Suspension travel normalized: 0.0f = max stretch; 1.0 = max compression
+        /// </summary>
         public float NormalizedSuspensionTravelRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Tire normalized slip ratio, 0 means 100% grip and ratio > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipRatioFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized slip ratio, 0 means 100% grip and ratio > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipRatioFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized slip ratio, 0 means 100% grip and ratio > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipRatioRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized slip ratio, 0 means 100% grip and ratio > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipRatioRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Wheel rotation speed radians/sec
+        /// </summary>
         public float WheelRotationSpeedFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Wheel rotation speed radians/sec
+        /// </summary>
         public float WheelRotationSpeedFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Wheel rotation speed radians/sec
+        /// </summary>
         public float WheelRotationSpeedRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Wheel rotation speed radians/sec
+        /// </summary>
         public float WheelRotationSpeedRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// 1 when wheel is on rumble strip, = 0 when off
+        /// </summary>
         public int WheelOnRumbleStripFrontLeft { get; set; } = 0;
+        /// <summary>
+        /// 1 when wheel is on rumble strip, = 0 when off
+        /// </summary>
         public int WheelOnRumbleStripFrontRight { get; set; } = 0;
+        /// <summary>
+        /// 1 when wheel is on rumble strip, = 0 when off
+        /// </summary>
         public int WheelOnRumbleStripRearLeft { get; set; } = 0;
+        /// <summary>
+        /// 1 when wheel is on rumble strip, = 0 when off
+        /// </summary>
         public int WheelOnRumbleStripRearRight { get; set; } = 0;
-        
+
+        /// <summary>
+        /// from 0 to 1, where 1 is the deepest puddle
+        /// </summary>
         public float WheelInPuddleDepthFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// from 0 to 1, where 1 is the deepest puddle
+        /// </summary>
         public float WheelInPuddleDepthFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// from 0 to 1, where 1 is the deepest puddle
+        /// </summary>
         public float WheelInPuddleDepthRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// from 0 to 1, where 1 is the deepest puddle
+        /// </summary>
         public float WheelInPuddleDepthRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Non-dimensional surface rumble values passed to controller force feedback
+        /// </summary>
         public float SurfaceRumbleFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Non-dimensional surface rumble values passed to controller force feedback
+        /// </summary>
         public float SurfaceRumbleFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Non-dimensional surface rumble values passed to controller force feedback
+        /// </summary>
         public float SurfaceRumbleRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Non-dimensional surface rumble values passed to controller force feedback
+        /// </summary>
         public float SurfaceRumbleRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Tire normalized slip angle, 0 means 100% grip and angle > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipAngleFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized slip angle, 0 means 100% grip and angle > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipAngleFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized slip angle, 0 means 100% grip and angle > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipAngleRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized slip angle, 0 means 100% grip and angle > 1.0 means loss of grip
+        /// </summary>
         public float TireSlipAngleRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Tire normalized combined slip, 0 means 100% grip and slip > 1.0 means loss of grip
+        /// </summary>
         public float TireCombinedSlipFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized combined slip, 0 means 100% grip and slip > 1.0 means loss of grip
+        /// </summary>
         public float TireCombinedSlipFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized combined slip, 0 means 100% grip and slip > 1.0 means loss of grip
+        /// </summary>
         public float TireCombinedSlipRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Tire normalized combined slip, 0 means 100% grip and slip > 1.0 means loss of grip
+        /// </summary>
         public float TireCombinedSlipRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Actual suspension travel in metres
+        /// </summary>
         public float SuspensionTravelMetersFrontLeft { get; set; } = 0f;
+        /// <summary>
+        /// Actual suspension travel in metres
+        /// </summary>
         public float SuspensionTravelMetersFrontRight { get; set; } = 0f;
+        /// <summary>
+        /// Actual suspension travel in metres
+        /// </summary>
         public float SuspensionTravelMetersRearLeft { get; set; } = 0f;
+        /// <summary>
+        /// Actual suspension travel in metres
+        /// </summary>
         public float SuspensionTravelMetersRearRight { get; set; } = 0f;
-        
+
+        /// <summary>
+        /// Unique ID of the car make/model
+        /// </summary>
         public int CarOrdinal { get; set; } = 0;
         public CarClass CarClass { get; set; } = CarClass.None;
+        /// <summary>
+        /// Between 100 (slowest car) and 999 (fastest car) inclusive
+        /// </summary>
         public int CarPerformanceIndex { get; set; } = 0;
         public DrivetrainType DrivetrainType { get; set; } = DrivetrainType.None;
+        /// <summary>
+        /// Number of cylinders in the engine
+        /// </summary>
         public int NumCylinders { get; set; } = 0;
 
 

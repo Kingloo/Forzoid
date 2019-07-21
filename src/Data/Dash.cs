@@ -9,11 +9,17 @@ namespace Forzoid.Data
         public float PositionY { get; set; } = 0f;
         public float PositionZ { get; set; } = 0f;
 
-        // Metres per second
+        /// <summary>
+        /// Metres per second
+        /// </summary>
         public float Speed { get; set; } = 0f;
-        // Watts
+        /// <summary>
+        /// Watts
+        /// </summary>
         public float Power { get; set; } = 0f;
-        // Newton metres
+        /// <summary>
+        /// Newton-metres
+        /// </summary>
         public float Torque { get; set; } = 0f;
 
         public float TireTempFrontLeft { get; set; } = 0f;
