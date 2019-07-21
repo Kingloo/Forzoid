@@ -13,9 +13,8 @@ namespace Forzoid.Data
             {
                 case 324:
                     return Game.ForzaHorizon4;
-                // TODO: I don't know what this should be
-                // case xxx:
-                //     return Game.ForzaMotorsport7;
+                case 311:
+                    return Game.ForzaMotorsport7;
                 case 0:
                     return Game.None;
                 default:
