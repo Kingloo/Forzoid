@@ -9,9 +9,11 @@ namespace Forzoid.Data
         public float PositionY { get; set; } = 0f;
         public float PositionZ { get; set; } = 0f;
 
-        // Speed is in metres per second
+        // Metres per second
         public float Speed { get; set; } = 0f;
+        // Watts
         public float Power { get; set; } = 0f;
+        // Newton metres
         public float Torque { get; set; } = 0f;
 
         public float TireTempFrontLeft { get; set; } = 0f;
@@ -28,17 +30,17 @@ namespace Forzoid.Data
         public float CurrentRaceTime { get; set; } = 0f;
 
         public int LapNumber { get; set; } = 0; // in docu. this is ushort
-        public byte RacePosition { get; set; } = byte.MinValue;
+        public int RacePosition { get; set; } = 0;
 
-        public byte Accel { get; set; } = byte.MinValue;
-        public byte Brake { get; set; } = byte.MinValue;
-        public byte Clutch { get; set; } = byte.MinValue;
-        public byte HandBrake { get; set; } = byte.MinValue;
-        public byte Gear { get; set; } = byte.MinValue;
-        public sbyte Steer { get; set; } = sbyte.MinValue;
+        public int Accel { get; set; } = 0;
+        public int Brake { get; set; } = 0;
+        public int Clutch { get; set; } = 0;
+        public int HandBrake { get; set; } = 0;
+        public int Gear { get; set; } = 0;
+        public int Steer { get; set; } = 0;
 
-        public sbyte NormalizedDrivingLine { get; set; } = sbyte.MinValue;
-        public sbyte NormalizedAIBrakeDifference { get; set; } = sbyte.MinValue;
+        public int NormalizedDrivingLine { get; set; } = sbyte.MinValue;
+        public int NormalizedAIBrakeDifference { get; set; } = sbyte.MinValue;
 
         public Dash() { }
 
@@ -90,17 +92,17 @@ namespace Forzoid.Data
             ushort lapNumber = ToUInt16(data.Slice(300, sizeof(ushort)));
 
             dash.LapNumber = Convert.ToInt32(lapNumber) + 1;
-            dash.RacePosition = data[302];
+            dash.RacePosition = ToInt32(data.Slice(302, sizeof(byte)));
 
-            dash.Accel = data[303];
-            dash.Brake = data[304];
-            dash.Clutch = data[305];
-            dash.HandBrake = data[306];
-            dash.Gear = data[307];
-            dash.Steer = (sbyte)data[308];
+            dash.Accel = ToInt32(data.Slice(303, sizeof(byte)));
+            dash.Brake = ToInt32(data.Slice(304, sizeof(byte)));
+            dash.Clutch = ToInt32(data.Slice(305, sizeof(byte)));
+            dash.HandBrake = ToInt32(data.Slice(306, sizeof(byte)));
+            dash.Gear = ToInt32(data.Slice(307, sizeof(byte)));
+            dash.Steer = ToInt32(data.Slice(308, sizeof(sbyte)));
 
-            dash.NormalizedDrivingLine = (sbyte)data[309];
-            dash.NormalizedAIBrakeDifference = (sbyte)data[310];
+            dash.NormalizedDrivingLine = ToInt32(data.Slice(309, sizeof(sbyte)));
+            dash.NormalizedAIBrakeDifference = ToInt32(data.Slice(310, sizeof(sbyte)));
 
             return dash;
         }
