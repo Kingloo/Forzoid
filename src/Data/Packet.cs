@@ -11,12 +11,7 @@ namespace Forzoid.Data
         public Dash Dash { get; set; }
 
         public Packet(IPEndPoint endPoint)
-            : this(Game.None, endPoint)
-        { }
-        
-        public Packet(Game game, IPEndPoint endPoint)
         {
-            Game = game;
             EndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
         }
 
@@ -30,13 +25,14 @@ namespace Forzoid.Data
 
             Game game = DataHelpers.DetermineGame(data.Span);
 
-            ReadOnlySpan<byte> adjusted = Prepare(game, data.Span);
+            ReadOnlySpan<byte> adjusted = PreparePacket(game, data.Span);
 
             if (Sled.Create(adjusted) is Sled sled
                 && Dash.Create(adjusted) is Dash dash)
             {
-                packet = new Packet(game, endPoint)
+                packet = new Packet(endPoint)
                 {
+                    Game = game,
                     Sled = sled,
                     Dash = dash
                 };
@@ -48,7 +44,7 @@ namespace Forzoid.Data
             return false;
         }
 
-        private static ReadOnlySpan<byte> Prepare(Game game, ReadOnlySpan<byte> data)
+        private static ReadOnlySpan<byte> PreparePacket(Game game, ReadOnlySpan<byte> data)
         {
             switch (game)
             {

@@ -75,9 +75,9 @@ namespace Forzoid.Data
         public float SuspensionTravelMetersRearRight { get; set; } = 0f;
         
         public int CarOrdinal { get; set; } = 0;
-        public int CarClass { get; set; } = 0;
+        public CarClass CarClass { get; set; } = CarClass.None;
         public int CarPerformanceIndex { get; set; } = 0;
-        public int DrivetrainType { get; set; } = 0;
+        public DrivetrainType DrivetrainType { get; set; } = DrivetrainType.None;
         public int NumCylinders { get; set; } = 0;
 
 
@@ -86,9 +86,9 @@ namespace Forzoid.Data
         public static Sled Create(ReadOnlySpan<byte> data)
         {
             // Future: C# 8.0 range operator
-            //    span[0..sizeof(int)]
-            //    span[4..sizeof(int)]
-            //    span[8..sizeof(float)]
+            //    data[0..sizeof(int)]
+            //    data[4..sizeof(int)]
+            //    data[8..sizeof(float)]
             // etc...
 
             if (data.Length == 0)
@@ -167,9 +167,15 @@ namespace Forzoid.Data
             sled.SuspensionTravelMetersRearRight = ToSingle(data.Slice(208, sizeof(float)));
 
             sled.CarOrdinal = ToInt32(data.Slice(212, sizeof(int)));
-            sled.CarClass = ToInt32(data.Slice(216, sizeof(int)));
+
+            int carClassRaw = ToInt32(data.Slice(216, sizeof(int)));
+            sled.CarClass = DataHelpers.DetermineCarClass(carClassRaw);
+            
             sled.CarPerformanceIndex = ToInt32(data.Slice(220, sizeof(int)));
-            sled.DrivetrainType = ToInt32(data.Slice(224, sizeof(int)));
+            
+            int drivetrainTypeRaw = ToInt32(data.Slice(224, sizeof(int)));
+            sled.DrivetrainType = DataHelpers.DetermineDrivetrainType(drivetrainTypeRaw);
+            
             sled.NumCylinders = ToInt32(data.Slice(228, sizeof(int)));
 
             return sled;

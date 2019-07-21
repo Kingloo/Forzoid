@@ -9,6 +9,7 @@ namespace Forzoid.Data
         public float PositionY { get; set; } = 0f;
         public float PositionZ { get; set; } = 0f;
 
+        // Speed is in metres per second
         public float Speed { get; set; } = 0f;
         public float Power { get; set; } = 0f;
         public float Torque { get; set; } = 0f;
@@ -76,7 +77,7 @@ namespace Forzoid.Data
                 
                 HOWEVER!
 
-                we can't just '+ 1' as '+' only works on ints
+                we can't just '+ 1' as '+' doesn't work on ushorts
                 so we extract it as a ushort then convert it to int - this is why the LapNumber property is an int instead of a ushort
                 
                 HOWEVER!
