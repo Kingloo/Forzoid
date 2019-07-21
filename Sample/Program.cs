@@ -16,11 +16,11 @@ namespace Sample
             /*
                 dotnet run 1234
                     or
-                dotnet Sample.dll 1234
+                dotnet .\Sample.dll 1234
                     or
-                Sample.exe 1234
+                .\Sample.exe 1234
 
-                depending on how you build/publish
+                depending on how you built/published
             */
 
             if (TrySetPortNumber(args, out int port))
@@ -40,7 +40,7 @@ namespace Sample
                     tokenSource.Cancel();
                 };
 
-                Console.WriteLine($"begin listening asyncly for data on port {listenPort}");
+                Console.WriteLine($"begin listening for data on port {listenPort}");
 
                 while (true)
                 {
@@ -53,7 +53,9 @@ namespace Sample
 
                     if (Packet.TryCreate(rawData, endPoint, out Packet packet))
                     {
-                        Console.WriteLine($"{packet.EndPoint.Address}:{packet.EndPoint.Port} - {packet.ToString()}");
+                        string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - {packet.Game} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber}";
+
+                        Console.WriteLine(message);
                     }
                 }
             }
