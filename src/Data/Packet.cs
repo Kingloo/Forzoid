@@ -35,7 +35,12 @@ namespace Forzoid.Data
             if (Sled.Create(adjusted) is Sled sled
                 && Dash.Create(adjusted) is Dash dash)
             {
-                packet = new Packet(game, endPoint);
+                packet = new Packet(game, endPoint)
+                {
+                    Sled = sled,
+                    Dash = dash
+                };
+                
                 return true;    
             }
 
