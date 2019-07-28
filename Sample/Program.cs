@@ -9,26 +9,21 @@ namespace Sample
 {
     public static class Program
     {
-        private static int listenPort = DataListener.DefaultPort;
+        /*
+            dotnet run {1234}
+                or
+            dotnet .\Sample.dll {1234}
+                or
+            .\Sample.exe {1234}
+
+            depending on how you built/published
+        */
 
         public static async Task<int> Main(string[] args)
         {
-            /*
-                dotnet run 1234
-                    or
-                dotnet .\Sample.dll 1234
-                    or
-                .\Sample.exe 1234
+            int port = TrySetPortNumber(args, out int p) ? p : DataListener.DefaultPort;
 
-                depending on how you built/published
-            */
-
-            if (TrySetPortNumber(args, out int port))
-            {
-                listenPort = port;
-            }
-
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, listenPort);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
 
             using (DataListener listener = new DataListener(endPoint))
             using (CancellationTokenSource tokenSource = new CancellationTokenSource())
@@ -40,7 +35,7 @@ namespace Sample
                     tokenSource.Cancel();
                 };
 
-                Console.WriteLine($"begin listening for data on port {listenPort}");
+                Console.WriteLine($"begin listening for data on port {port}");
 
                 while (true)
                 {
