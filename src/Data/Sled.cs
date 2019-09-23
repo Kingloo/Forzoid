@@ -202,12 +202,6 @@ namespace Forzoid.Data
 
         public static Sled Create(ReadOnlySpan<byte> data)
         {
-            // Future: C# 8.0 range operator
-            //    data[0..sizeof(int)]
-            //    data[4..sizeof(int)]
-            //    data[8..sizeof(float)]
-            // etc...
-
             if (data.Length == 0)
             {
                 return null;
@@ -215,7 +209,7 @@ namespace Forzoid.Data
 
             Sled sled = new Sled();
 
-            int isRaceOnRaw = ToInt32(data.Slice(0, sizeof(int))); 
+            int isRaceOnRaw = ToInt32(data.Slice(0, sizeof(int)));
             sled.IsRaceOn = isRaceOnRaw == 1;
             
             sled.TimestampMS = ToUInt32(data.Slice(4, sizeof(int)));

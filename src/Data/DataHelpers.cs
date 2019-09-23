@@ -8,60 +8,36 @@ namespace Forzoid.Data
             => DetermineGame(packet.AsSpan());
 
         public static Game DetermineGame(ReadOnlySpan<byte> packet)
-        {
-            switch (packet.Length)
-            {
-                case 0:
-                    return Game.None;
-                case 311:
-                    return Game.ForzaMotorsport7;
-                case 324:
-                    return Game.ForzaHorizon4;
-                default:
-                    return Game.Unknown;
-            }
-        }
+            => packet.Length switch
+                {
+                    0 => Game.None,
+                    311 => Game.ForzaMotorsport7,
+                    324 => Game.ForzaHorizon4,
+                    _ => Game.Unknown
+                };
 
         public static CarClass DetermineCarClass(int value)
-        {
-            switch (value)
-            {
-                case 0:
-                    return CarClass.E;
-                case 1:
-                    return CarClass.D;
-                case 2:
-                    return CarClass.C;
-                case 3:
-                    return CarClass.B;
-                case 4:
-                    return CarClass.A;
-                case 5:
-                    return CarClass.S;
-                case 6:
-                    return CarClass.R;
-                case 7:
-                    return CarClass.P;
-                case 8:
-                    return CarClass.X;
-                default:
-                    return CarClass.Unknown;
-            }
-        }
+            => value switch
+                {
+                    0 => CarClass.E,
+                    1 => CarClass.D,
+                    2 => CarClass.C,
+                    3 => CarClass.B,
+                    4 => CarClass.A,
+                    5 => CarClass.S,
+                    6 => CarClass.R,
+                    7 => CarClass.P,
+                    8 => CarClass.X,
+                    _ => CarClass.Unknown
+                };
 
         public static DrivetrainType DetermineDrivetrainType(int value)
-        {
-            switch (value)
-            {
-                case 0:
-                    return DrivetrainType.FWD;
-                case 1:
-                    return DrivetrainType.RWD;
-                case 2:
-                    return DrivetrainType.AWD;
-                default:
-                    return DrivetrainType.Unknown;
-            }
-        }
+            => value switch
+                {
+                    0 => DrivetrainType.FWD,
+                    1 => DrivetrainType.RWD,
+                    2 => DrivetrainType.AWD,
+                    _ => DrivetrainType.Unknown
+                };
     }
 }

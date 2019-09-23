@@ -45,18 +45,13 @@ namespace Forzoid.Data
         }
 
         private static ReadOnlySpan<byte> PreparePacket(Game game, ReadOnlySpan<byte> data)
-        {
-            switch (game)
-            {
-                case Game.ForzaHorizon4:
-                    return PrepareForForzaHorizon4(data);
-                case Game.ForzaMotorsport7:
-                    return PrepareForForzaMotorsport7(data);
-                default:
-                    return ReadOnlySpan<byte>.Empty;
-            }
-        }
-
+            => game switch
+                {
+                    Game.ForzaHorizon4 => PrepareForForzaHorizon4(data),
+                    Game.ForzaMotorsport7 => PrepareForForzaMotorsport7(data),
+                    _ => ReadOnlySpan<byte>.Empty
+                };
+        
         private static ReadOnlySpan<byte> PrepareForForzaMotorsport7(ReadOnlySpan<byte> data)
         {
             // a Forza Motorsport 7 packet is contiguous, no unknown data and no gaps

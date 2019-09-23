@@ -36,6 +36,9 @@ namespace Forzoid
             udpClient = new UdpClient(endPoint);
         }
 
+        public Task<ReadOnlyMemory<byte>> ListenAsync()
+            => ListenAsync(CancellationToken.None);
+
         public async Task<ReadOnlyMemory<byte>> ListenAsync(CancellationToken token)
         {
             try
