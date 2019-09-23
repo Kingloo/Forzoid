@@ -37,13 +37,8 @@ namespace Sample
 
                 Console.WriteLine($"begin listening for data on port {port}");
 
-                while (true)
+                do
                 {
-                    if (tokenSource.IsCancellationRequested)
-                    {
-                        break;
-                    }
-                    
                     ReadOnlyMemory<byte> rawData = await listener.ListenAsync(tokenSource.Token);
 
                     if (Packet.TryCreate(rawData, endPoint, out Packet packet))
@@ -53,6 +48,7 @@ namespace Sample
                         Console.WriteLine(message);
                     }
                 }
+                while (!tokenSource.IsCancellationRequested);
             }
 
             return 0;
