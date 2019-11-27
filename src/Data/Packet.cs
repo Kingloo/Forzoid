@@ -7,15 +7,15 @@ namespace Forzoid.Data
     {
         public IPEndPoint EndPoint { get; }
         public Game Game { get; set; } = Game.None;
-        public Sled Sled { get; set; }
-        public Dash Dash { get; set; }
+        public Sled? Sled { get; set; } = null;
+        public Dash? Dash { get; set; } = null;
 
         public Packet(IPEndPoint endPoint)
         {
-            EndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
+            EndPoint = endPoint;
         }
 
-        public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, out Packet packet)
+        public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, out Packet? packet)
         {
             if (data.Length == 0)
             {

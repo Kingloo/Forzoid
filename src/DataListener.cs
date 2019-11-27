@@ -14,7 +14,7 @@ namespace Forzoid
         private const int _defaultPort = 50120;
         public static int DefaultPort => _defaultPort;
         
-        private readonly UdpClient udpClient = null;
+        private readonly UdpClient udpClient;
         
         public DataListener()
             : this(new IPEndPoint(IPAddress.Any, _defaultPort))
@@ -41,21 +41,16 @@ namespace Forzoid
 
         public async Task<ReadOnlyMemory<byte>> ListenAsync(CancellationToken token)
         {
-            try
-            {
-                Task<UdpReceiveResult> task = Task.Run(udpClient.ReceiveAsync, token);
+            Task<UdpReceiveResult> task = Task.Run(udpClient.ReceiveAsync, token);
             
-                UdpReceiveResult result = await task.ConfigureAwait(false);
-                
-                // .ReceiveAsync can throw SocketException
-                // this is intentionally left to the consumer to deal with
+            UdpReceiveResult result = await task.ConfigureAwait(false);
 
-                return new ReadOnlyMemory<byte>(result.Buffer);
-            }
-            catch (TaskCanceledException)
+            if (task.IsFaulted)
             {
                 return ReadOnlyMemory<byte>.Empty;
             }
+
+            return new ReadOnlyMemory<byte>(result.Buffer);
         }
 
         private bool disposedValue = false;

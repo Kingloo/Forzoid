@@ -200,7 +200,7 @@ namespace Forzoid.Data
 
         public Sled() { }
 
-        public static Sled Create(ReadOnlySpan<byte> data)
+        public static Sled? Create(ReadOnlySpan<byte> data)
         {
             if (data.Length == 0)
             {

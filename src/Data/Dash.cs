@@ -62,7 +62,7 @@ namespace Forzoid.Data
 
         public Dash() { }
 
-        public static Dash Create(ReadOnlySpan<byte> data)
+        public static Dash? Create(ReadOnlySpan<byte> data)
         {
             if (data.Length == 0)
             {
