@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
@@ -36,21 +37,39 @@ namespace Forzoid
             udpClient = new UdpClient(endPoint);
         }
 
-        public Task<ReadOnlyMemory<byte>> ListenAsync()
-            => ListenAsync(CancellationToken.None);
+        public Task<ReadOnlyMemory<byte>> ListenAsync() => ListenAsync(CancellationToken.None);
 
         public async Task<ReadOnlyMemory<byte>> ListenAsync(CancellationToken token)
         {
-            Task<UdpReceiveResult> task = Task.Run(udpClient.ReceiveAsync, token);
-            
-            UdpReceiveResult result = await task.ConfigureAwait(false);
+            try
+            {
+                Task<UdpReceiveResult> task = Task.Run(udpClient.ReceiveAsync);
 
-            if (task.IsFaulted)
+                while (!task.IsCanceled
+                    && !task.IsCompleted
+                    && !task.IsCompletedSuccessfully
+                    && !task.IsFaulted)
+                {
+                    token.ThrowIfCancellationRequested();
+
+                    await Task.Delay(TimeSpan.FromMilliseconds(5d)).ConfigureAwait(false);
+                }
+
+                if (task.IsCompletedSuccessfully)
+                {
+                    UdpReceiveResult result = await task.ConfigureAwait(false);
+
+                    return new ReadOnlyMemory<byte>(result.Buffer);
+                }
+                else
+                {
+                    return ReadOnlyMemory<byte>.Empty;
+                }
+            }
+            catch (OperationCanceledException)
             {
                 return ReadOnlyMemory<byte>.Empty;
             }
-
-            return new ReadOnlyMemory<byte>(result.Buffer);
         }
 
         private bool disposedValue = false;
