@@ -2,12 +2,12 @@ using System;
 
 namespace Forzoid.Data
 {
-    public static class DataHelpers
+    internal static class DataHelpers
     {
-        public static Game DetermineGame(byte[] packet)
+        internal static Game DetermineGame(byte[] packet)
             => DetermineGame(packet.AsSpan());
 
-        public static Game DetermineGame(ReadOnlySpan<byte> packet)
+        internal static Game DetermineGame(ReadOnlySpan<byte> packet)
             => packet.Length switch
                 {
                     0 => Game.None,
@@ -16,7 +16,7 @@ namespace Forzoid.Data
                     _ => Game.Unknown
                 };
 
-        public static CarClass DetermineCarClass(int value)
+        internal static CarClass DetermineCarClass(int value)
             => value switch
                 {
                     0 => CarClass.E,
@@ -31,7 +31,7 @@ namespace Forzoid.Data
                     _ => CarClass.Unknown
                 };
 
-        public static DrivetrainType DetermineDrivetrainType(int value)
+        internal static DrivetrainType DetermineDrivetrainType(int value)
             => value switch
                 {
                     0 => DrivetrainType.FWD,
