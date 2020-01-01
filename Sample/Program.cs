@@ -30,7 +30,9 @@ namespace Sample
             {
                 Console.CancelKeyPress += (s, e) =>
                 {
-                    Console.WriteLine("exiting...");
+                    e.Cancel = true;
+
+                    Console.Write("exiting...");
 
                     tokenSource.Cancel();
                 };
@@ -49,6 +51,8 @@ namespace Sample
                     }
                 }
                 while (!tokenSource.IsCancellationRequested);
+
+                Console.WriteLine(" - exited!");
             }
 
             return 0;
