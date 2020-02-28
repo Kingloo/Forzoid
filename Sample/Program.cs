@@ -15,6 +15,8 @@ namespace Sample
             dotnet .\Sample.dll {1234}
                 or
             .\Sample.exe {1234}
+                or
+            .\Sample {1234}
 
             depending on how you built/published
         */
@@ -25,29 +27,28 @@ namespace Sample
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
 
-            using (DataListener listener = new DataListener(endPoint))
-            using (CancellationTokenSource tokenSource = new CancellationTokenSource())
+            using DataListener listener = new DataListener(endPoint);
+            using CancellationTokenSource tokenSource = new CancellationTokenSource();
+
+            Console.CancelKeyPress += (s, e) =>
             {
-                Console.CancelKeyPress += (s, e) =>
-                {
-                    e.Cancel = true;
+                e.Cancel = true;
 
-                    Console.Write("exiting...");
+                Console.Write("exiting...");
 
-                    tokenSource.Cancel();
-                };
+                tokenSource.Cancel();
+            };
 
-                Console.WriteLine($"begin listening for data on port {port}");
+            Console.WriteLine($"begin listening for data on port {port}");
 
-                await foreach (Packet packet in listener.ListenEnumerableAsync(tokenSource.Token))
-                {
-                    string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - cur. race time: {packet.Dash.CurrentRaceTime}";
+            await foreach (Packet packet in listener.ListenEnumerableAsync(tokenSource.Token))
+            {
+                string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - cur. race time: {packet.Dash.CurrentRaceTime}";
 
-                    Console.WriteLine(message);
-                }
-
-                Console.WriteLine(" - exited!");
+                Console.WriteLine(message);
             }
+
+            Console.WriteLine(" - exited!");
 
             return 0;
         }
@@ -68,7 +69,7 @@ namespace Sample
 
             if (newPort < 1024 || newPort > 65535)
             {
-                Console.Error.WriteLine($"Fatal error: port number ({newPort}) must be >=1024 and <=65535");
+                Console.Error.WriteLine($"!! port number ({newPort}) must be >=1024 and <=65535");
 
                 port = -1;
                 return false;
