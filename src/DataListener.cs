@@ -1,20 +1,23 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Forzoid.Data;
 
 namespace Forzoid
 {
     public class DataListener : IDisposable
     {
         private const int minPort = 1024;
+        private const int maxPort = 65535;
         
         private const int _defaultPort = 50120;
         public static int DefaultPort => _defaultPort;
-        
+
+        private readonly IPEndPoint ipEndPoint;
         private readonly UdpClient udpClient;
         
         public DataListener()
@@ -27,49 +30,41 @@ namespace Forzoid
 
         public DataListener(IPEndPoint endPoint)
         {
-            if (endPoint.Port < minPort)
+            if (endPoint.Port < minPort || endPoint.Port > maxPort)
             {
-                string message = string.Format(CultureInfo.CurrentCulture, "port cannot be less than {0}, was {1}", minPort, endPoint.Port);
+                string message = string.Format(CultureInfo.CurrentCulture, "port number must be between {0} and {1} (you provided {2})", minPort, maxPort, endPoint.Port);
 
                 throw new ArgumentOutOfRangeException(nameof(endPoint), message);
             }
 
+            ipEndPoint = endPoint;
             udpClient = new UdpClient(endPoint);
         }
 
-        public Task<ReadOnlyMemory<byte>> ListenAsync() => ListenAsync(CancellationToken.None);
-
-        public async Task<ReadOnlyMemory<byte>> ListenAsync(CancellationToken token)
+        public async Task<Packet?> ListenAsync()
         {
-            try
+            UdpReceiveResult result = await udpClient.ReceiveAsync().ConfigureAwait(false);
+
+            return Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet) ? packet : null;
+        }
+
+        public async IAsyncEnumerable<Packet?> ListenEnumerableAsync(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
             {
-                Task<UdpReceiveResult> task = Task.Run(udpClient.ReceiveAsync);
+                UdpReceiveResult result = await udpClient.ReceiveAsync();
 
-                while (!task.IsCanceled
-                    && !task.IsCompleted
-                    && !task.IsCompletedSuccessfully
-                    && !task.IsFaulted)
+                if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
                 {
-                    token.ThrowIfCancellationRequested();
-
-                    await Task.Delay(TimeSpan.FromMilliseconds(5d)).ConfigureAwait(false);
+                    yield return packet;
                 }
-
-                if (task.IsCompletedSuccessfully)
+                else // unsure if this is necessary
                 {
-                    UdpReceiveResult result = await task.ConfigureAwait(false);
-
-                    return new ReadOnlyMemory<byte>(result.Buffer);
-                }
-                else
-                {
-                    return ReadOnlyMemory<byte>.Empty;
+                    yield return null;
                 }
             }
-            catch (OperationCanceledException)
-            {
-                return ReadOnlyMemory<byte>.Empty;
-            }
+
+            yield break;
         }
 
         private bool disposedValue = false;

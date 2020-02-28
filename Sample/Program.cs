@@ -39,18 +39,12 @@ namespace Sample
 
                 Console.WriteLine($"begin listening for data on port {port}");
 
-                do
+                await foreach (Packet packet in listener.ListenEnumerableAsync(tokenSource.Token))
                 {
-                    ReadOnlyMemory<byte> rawData = await listener.ListenAsync(tokenSource.Token);
+                    string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - cur. race time: {packet.Dash.CurrentRaceTime}";
 
-                    if (Packet.TryCreate(rawData, endPoint, out Packet packet))
-                    {
-                        string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - tire temp: {packet.Dash.TireTempFrontRight} - cur. race time: {packet.Dash.CurrentRaceTime}";
-
-                        Console.WriteLine(message);
-                    }
+                    Console.WriteLine(message);
                 }
-                while (!tokenSource.IsCancellationRequested);
 
                 Console.WriteLine(" - exited!");
             }
@@ -74,7 +68,7 @@ namespace Sample
 
             if (newPort < 1024 || newPort > 65535)
             {
-                Console.Error.WriteLine($"Fatal error: port number ({newPort}) must be between 1024 and 65535");
+                Console.Error.WriteLine($"Fatal error: port number ({newPort}) must be >=1024 and <=65535");
 
                 port = -1;
                 return false;

@@ -5,15 +5,19 @@ namespace Forzoid.Data
 {
     public class Packet
     {
-        public IPEndPoint EndPoint { get; }
+        public IPEndPoint? EndPoint { get; } = null;
         public Game Game { get; set; } = Game.None;
         public Sled? Sled { get; set; } = null;
         public Dash? Dash { get; set; } = null;
+
+        public Packet() { }
 
         public Packet(IPEndPoint endPoint)
         {
             EndPoint = endPoint;
         }
+
+        public static Packet Empty => new Packet();
 
         public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, out Packet? packet)
         {
