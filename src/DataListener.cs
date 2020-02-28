@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Forzoid.Data;
@@ -48,7 +49,7 @@ namespace Forzoid
             return Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet) ? packet : null;
         }
 
-        public async IAsyncEnumerable<Packet?> ListenEnumerableAsync(CancellationToken token)
+        public async IAsyncEnumerable<Packet?> ListenEnumerableAsync([EnumeratorCancellation]CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -58,14 +59,12 @@ namespace Forzoid
                 {
                     yield return packet;
                 }
-                else // unsure if this is necessary
-                {
-                    yield return Packet.Empty;
-                }
             }
 
             yield break;
         }
+
+
 
         private bool disposedValue = false;
 
