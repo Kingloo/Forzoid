@@ -60,7 +60,7 @@ namespace Forzoid
                 }
                 else // unsure if this is necessary
                 {
-                    yield return null;
+                    yield return Packet.Empty;
                 }
             }
 
