@@ -42,18 +42,11 @@ namespace Forzoid
             udpClient = new UdpClient(endPoint);
         }
 
-        public async Task<Packet?> ListenAsync()
-        {
-            UdpReceiveResult result = await udpClient.ReceiveAsync().ConfigureAwait(false);
-
-            return Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet) ? packet : null;
-        }
-
-        public async IAsyncEnumerable<Packet?> ListenEnumerableAsync([EnumeratorCancellation]CancellationToken token)
+        public async IAsyncEnumerable<Packet?> ListenAsync([EnumeratorCancellation]CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
-                UdpReceiveResult result = await udpClient.ReceiveAsync();
+                UdpReceiveResult result = await udpClient.ReceiveAsync().ConfigureAwait(false);
 
                 if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
                 {

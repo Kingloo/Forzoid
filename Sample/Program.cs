@@ -41,7 +41,7 @@ namespace Sample
 
             Console.WriteLine($"begin listening for data on port {port}");
 
-            await foreach (Packet packet in listener.ListenEnumerableAsync(tokenSource.Token))
+            await foreach (Packet packet in listener.ListenAsync(tokenSource.Token))
             {
                 string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - cur. race time: {packet.Dash.CurrentRaceTime}";
 
