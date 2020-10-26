@@ -40,7 +40,7 @@ namespace Forzoid
             udpClient = new UdpClient(endPoint);
         }
 
-        public async IAsyncEnumerable<Packet?> ListenAsync([EnumeratorCancellation]CancellationToken token)
+        public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation]CancellationToken token)
         {
             while (!token.IsCancellationRequested)
             {
@@ -48,7 +48,9 @@ namespace Forzoid
 
                 if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
                 {
+#nullable disable
                     yield return packet;
+#nullable enable
                 }
             }
 
