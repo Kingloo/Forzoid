@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Forzoid.Data;
 
 namespace Forzoid
@@ -14,7 +13,6 @@ namespace Forzoid
     {
         private const int minPort = 1024;
         private const int maxPort = 65535;
-        
         private const int _defaultPort = 50120;
         public static int DefaultPort => _defaultPort;
 
@@ -56,8 +54,6 @@ namespace Forzoid
 
             yield break;
         }
-
-
 
         private bool disposedValue = false;
 
