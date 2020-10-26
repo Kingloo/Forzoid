@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Forzoid;
@@ -41,11 +42,24 @@ namespace Sample
 
             Console.WriteLine($"begin listening for data on port {port}");
 
+            StringBuilder sb = new StringBuilder();
+
             await foreach (Packet packet in listener.ListenAsync(tokenSource.Token))
             {
-                string message = $"{packet.EndPoint.Address}:{packet.EndPoint.Port} - pos.: {packet.Dash.RacePosition} - lap: {packet.Dash.LapNumber} - cur. race time: {packet.Dash.CurrentRaceTime}";
+                if (packet.EndPoint is null
+                    || packet.Dash is null)
+                {
+                    continue;
+                }
 
-                Console.WriteLine(message);
+                sb.Append($"{packet.EndPoint.Address}:{packet.EndPoint.Port} - ");
+                sb.Append($"pos.: {packet.Dash.RacePosition} - ");
+                sb.Append($"lap: {packet.Dash.LapNumber} - ");
+                sb.Append($"cur. race time: {packet.Dash.CurrentRaceTime}");
+                
+                Console.WriteLine(sb.ToString());
+
+                sb.Clear();
             }
 
             Console.WriteLine(" - exited!");
