@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Forzoid.Data
@@ -19,7 +20,7 @@ namespace Forzoid.Data
 
         public static Packet Empty => new Packet();
 
-        public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, out Packet? packet)
+        public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, [NotNullWhen(true)] out Packet? packet)
         {
             if (data.Length == 0)
             {

@@ -48,9 +48,7 @@ namespace Forzoid
 
                 if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
                 {
-#nullable disable
                     yield return packet;
-#nullable enable
                 }
             }
 
