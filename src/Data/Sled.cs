@@ -1,5 +1,10 @@
 using System;
+
+#if NETSTANDARD2_0
+using static Forzoid.Data.DataHelpers;
+#else
 using static System.BitConverter;
+#endif
 
 namespace Forzoid.Data
 {

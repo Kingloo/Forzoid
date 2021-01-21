@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Forzoid.csproj" />
+    <ProjectReference Include="..\src\Forzoid.csproj" AdditionalProperties="TargetFramework=netstandard2.1" />
   </ItemGroup>
 
 </Project>
