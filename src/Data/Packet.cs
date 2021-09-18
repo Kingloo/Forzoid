@@ -53,6 +53,7 @@ namespace Forzoid.Data
             => game switch
                 {
                     Game.ForzaHorizon4 => PrepareForForzaHorizon4(data),
+                    Game.ForzaHorizon5 => throw new NotImplementedException("Forza Horizon 5 is not supported (yet)"),
                     Game.ForzaMotorsport7 => PrepareForForzaMotorsport7(data),
                     _ => ReadOnlySpan<byte>.Empty
                 };
