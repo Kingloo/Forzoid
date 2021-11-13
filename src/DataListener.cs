@@ -9,71 +9,71 @@ using Forzoid.Data;
 
 namespace Forzoid
 {
-    public class DataListener : IDisposable
-    {
-        private const int minPort = 1024;
-        private const int maxPort = 65535;
-        private const int _defaultPort = 50120;
-        public static int DefaultPort => _defaultPort;
+	public class DataListener : IDisposable
+	{
+		private const int minPort = 1024;
+		private const int maxPort = 65535;
+		private const int _defaultPort = 50120;
+		public static int DefaultPort => _defaultPort;
 
-        private readonly IPEndPoint ipEndPoint;
-        private readonly UdpClient udpClient;
-        
-        public DataListener()
-            : this(new IPEndPoint(IPAddress.Any, _defaultPort))
-        { }
+		private readonly IPEndPoint ipEndPoint;
+		private readonly UdpClient udpClient;
 
-        public DataListener(int port)
-            : this(new IPEndPoint(IPAddress.Any, port))
-        { }
+		public DataListener()
+			: this(new IPEndPoint(IPAddress.Any, _defaultPort))
+		{ }
 
-        public DataListener(IPEndPoint endPoint)
-        {
-            if (endPoint.Port < minPort || endPoint.Port > maxPort)
-            {
-                string message = string.Format(CultureInfo.CurrentCulture, "port number must be between {0} and {1} (you provided {2})", minPort, maxPort, endPoint.Port);
+		public DataListener(int port)
+			: this(new IPEndPoint(IPAddress.Any, port))
+		{ }
 
-                throw new ArgumentOutOfRangeException(nameof(endPoint), message);
-            }
+		public DataListener(IPEndPoint endPoint)
+		{
+			if (endPoint.Port < minPort || endPoint.Port > maxPort)
+			{
+				string message = string.Format(CultureInfo.CurrentCulture, "port number must be between {0} and {1} (you provided {2})", minPort, maxPort, endPoint.Port);
 
-            ipEndPoint = endPoint;
-            udpClient = new UdpClient(endPoint);
-        }
+				throw new ArgumentOutOfRangeException(nameof(endPoint), message);
+			}
 
-        public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation]CancellationToken token)
-        {
-            while (!token.IsCancellationRequested)
-            {
-                UdpReceiveResult result = await udpClient.ReceiveAsync().ConfigureAwait(false);
+			ipEndPoint = endPoint;
+			udpClient = new UdpClient(endPoint);
+		}
 
-                if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
-                {
-                    yield return packet;
-                }
-            }
+		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken token)
+		{
+			while (!token.IsCancellationRequested)
+			{
+				UdpReceiveResult result = await udpClient.ReceiveAsync().ConfigureAwait(false);
 
-            yield break;
-        }
+				if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
+				{
+					yield return packet;
+				}
+			}
 
-        private bool disposedValue = false;
+			yield break;
+		}
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    udpClient.Dispose();
-                }
+		private bool disposedValue = false;
 
-                disposedValue = true;
-            }
-        }
-        
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-    }
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					udpClient.Dispose();
+				}
+
+				disposedValue = true;
+			}
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+	}
 }

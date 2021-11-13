@@ -1,11 +1,11 @@
 namespace Forzoid.Data
 {
-    public enum DrivetrainType
-    {
-        None,
-        FWD,
-        RWD,
-        AWD,
-        Unknown
-    }
+	public enum DrivetrainType
+	{
+		None,
+		FWD,
+		RWD,
+		AWD,
+		Unknown
+	}
 }
