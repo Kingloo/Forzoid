@@ -13,14 +13,14 @@ namespace Forzoid
 	{
 		private const int minPort = 1024;
 		private const int maxPort = 65535;
-		private const int _defaultPort = 50120;
-		public static int DefaultPort => _defaultPort;
+
+		public const int DefaultPort = 50120;
 
 		private readonly IPEndPoint ipEndPoint;
 		private readonly UdpClient udpClient;
 
 		public DataListener()
-			: this(new IPEndPoint(IPAddress.Any, _defaultPort))
+			: this(new IPEndPoint(IPAddress.Any, DefaultPort))
 		{ }
 
 		public DataListener(int port)
@@ -42,9 +42,20 @@ namespace Forzoid
 
 		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken token)
 		{
+			token.Register(() => udpClient.Close());
+
 			while (!token.IsCancellationRequested)
 			{
-				UdpReceiveResult result = await udpClient.ReceiveAsync().ConfigureAwait(false);
+				UdpReceiveResult result = default;
+
+				try
+				{
+					result = await udpClient.ReceiveAsync().ConfigureAwait(false);
+				}
+				catch (SocketException)
+				{
+					yield break;
+				}
 
 				if (Packet.TryCreate(result.Buffer, ipEndPoint, out Packet? packet))
 				{
