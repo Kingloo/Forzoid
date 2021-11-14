@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Net;
+using System.Text;
 
 namespace Forzoid.Data
 {
@@ -68,7 +71,6 @@ namespace Forzoid.Data
 		private static ReadOnlySpan<byte> PrepareForForzaHorizon4(ReadOnlySpan<byte> data)
 		{
 			/*
-
                 courtesy RUBITS from the ForzaMotorsport.net forums
 
                 https://forums.forzamotorsport.net/turn10_postsm1086008_Data-Output.aspx#post_1086008
@@ -77,12 +79,15 @@ namespace Forzoid.Data
 
                 [0]-[231] FM7 Sled data (as mentioned before)
                 [232]-[243] FH4 new unknown data
+					[232]->[235]
+						changes when you change car, not individual car ID or manufacturer
+						some manufacturers' cars have same ID, some cars from different manufacturers have same number
+					[236]->[239] and [240]->[243]
+						environmental damage (e.g. trees, walls) but NOT other cars
+						when parsed as floats gives values between 0.0 and 1.0
                 [244]-[322] FM7 Car Dash data
                 [323] FH4 new unknown data
-
-                !!! We are throwing away the unknown data as it is, well, unknown.
-                This can be revisited when/if a full packet format for FH4 is published.
-
+					has always been zero
             */
 
 			int fm7SledLength = 232;
