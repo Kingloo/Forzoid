@@ -1,0 +1,152 @@
+private static void DumpDebugAsInt32s(ReadOnlySpan<byte> data)
+{
+    List<int> list = new List<int>();
+
+    for (int i = 232; i < 244; i = i + sizeof(int))
+    {
+        int anInt = BitConverter.ToInt32(data.Slice(i, sizeof(int)));
+        list.Add(anInt);
+    }
+
+    list.Add((int)data[323]);
+
+    string GetPaddingFrom(int number)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int toPadby = 15 - number.ToString().Length;
+
+        for (int i = 0; i < toPadby; i++)
+        {
+            sb.Append(" ");
+        }
+
+        return sb.ToString();
+    };
+
+    StringBuilder sb = new StringBuilder();
+
+    if (list.Any(i => i != 0))
+    {
+        foreach (int each in list)
+        {
+            sb.Append($"{each}{GetPaddingFrom(each)}");
+        }
+
+        Console.WriteLine(sb.ToString());
+    }
+}
+
+private static void DumpDebugAsInt16s(ReadOnlySpan<byte> data)
+{
+    List<Int16> list = new List<Int16>();
+
+    for (int i = 232; i < 244; i = i + sizeof(Int16))
+    {
+        Int16 value = BitConverter.ToInt16(data.Slice(i, sizeof(Int16)));
+        list.Add(value);
+    }
+
+    // list.Add((int)data[323]);
+
+    string GetPaddingFrom(Int16 number)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int toPadby = 15 - number.ToString().Length;
+
+        for (int i = 0; i < toPadby; i++)
+        {
+            sb.Append(" ");
+        }
+
+        return sb.ToString();
+    };
+
+    StringBuilder sb = new StringBuilder();
+
+    if (list.Any(i => i != 0))
+    {
+        foreach (Int16 each in list)
+        {
+            sb.Append($"{each}{GetPaddingFrom(each)}");
+        }
+
+        Console.WriteLine(sb.ToString());
+    }
+}
+
+private static void DumpDebugAsInt8s(ReadOnlySpan<byte> data)
+{
+    List<int> list = new List<int>();
+
+    for (int i = 232; i < 244; i++)
+    {
+        list.Add((int)data[i]);
+    }
+
+    list.Add((int)data[323]);
+
+    string GetPaddingFrom(int number)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int toPadby = 15 - number.ToString().Length;
+
+        for (int i = 0; i < toPadby; i++)
+        {
+            sb.Append(" ");
+        }
+
+        return sb.ToString();
+    };
+
+    StringBuilder sb = new StringBuilder();
+
+    if (list.Any(i => i != 0))
+    {
+        foreach (int each in list)
+        {
+            sb.Append($"{each}{GetPaddingFrom(each)}");
+        }
+
+        Console.WriteLine(sb.ToString());
+    }
+}
+
+private static void DumpDebugAsFloats(ReadOnlySpan<byte> data)
+{
+    List<float> list = new List<float>();
+
+    for (int i = 232; i < 244; i = i + sizeof(float))
+    {
+        float value = BitConverter.ToSingle(data.Slice(i, sizeof(float)));
+        list.Add(value);
+    }
+
+    string GetPaddingFrom(float number)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        int toPadby = 15 - number.ToString().Length;
+
+        for (int i = 0; i < toPadby; i++)
+        {
+            sb.Append(" ");
+        }
+
+        return sb.ToString();
+    };
+
+    StringBuilder sb = new StringBuilder();
+
+    if (list.Any(i => i != 0))
+    {
+        foreach (float each in list)
+        {
+            sb.Append($"{each}{GetPaddingFrom(each)}");
+        }
+
+        Console.WriteLine(sb.ToString());
+    }
+}
