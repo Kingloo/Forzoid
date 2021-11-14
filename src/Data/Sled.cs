@@ -10,6 +10,9 @@ namespace Forzoid.Data
 {
 	public class Sled
 	{
+		/// <summary>
+		/// IsRaceOn returns True when in the open world in Forza Horizon.
+		/// </summary>
 		public bool IsRaceOn { get; set; } = false;
 
 		public uint TimestampMS { get; set; } = 0;
