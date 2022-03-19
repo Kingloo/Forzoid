@@ -29,6 +29,11 @@ namespace Forzoid
 
 		public DataListener(IPEndPoint endPoint)
 		{
+			if (endPoint is null)
+			{
+				throw new ArgumentNullException(nameof(endPoint));
+			}
+
 			if (endPoint.Port < minPort || endPoint.Port > maxPort)
 			{
 				string message = string.Format(CultureInfo.CurrentCulture, "port number must be between {0} and {1} (you provided {2})", minPort, maxPort, endPoint.Port);
@@ -40,17 +45,19 @@ namespace Forzoid
 			udpClient = new UdpClient(endPoint);
 		}
 
-		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken token)
+		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken cancellationToken)
 		{
-			token.Register(() => udpClient.Close());
+			cancellationToken.Register(() => udpClient.Close());
 
-			while (!token.IsCancellationRequested)
+			UdpReceiveResult result = default;
+
+			while (true)
 			{
-				UdpReceiveResult result = default;
+				cancellationToken.ThrowIfCancellationRequested();
 
 				try
 				{
-					result = await udpClient.ReceiveAsync().ConfigureAwait(false);
+					result = await udpClient.ReceiveAsync(cancellationToken).ConfigureAwait(false);
 				}
 				catch (SocketException)
 				{
@@ -62,8 +69,6 @@ namespace Forzoid
 					yield return packet;
 				}
 			}
-
-			yield break;
 		}
 
 		private bool disposedValue = false;
