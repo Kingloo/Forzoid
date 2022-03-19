@@ -9,3 +9,7 @@ insert_final_newline = true
 
 # IDE0090: Use 'new(...)'
 csharp_style_implicit_object_creation_when_type_is_apparent = false
+
+# CA1805 - complains about initializing to default value
+# e.g. int i = 0;
+dotnet_diagnostic.CA1805.severity = none
