@@ -67,8 +67,14 @@ namespace Sample
 			return 0;
 		}
 
-		private static bool TrySetPortNumber(string[] args, out int port)
+		private static bool TrySetPortNumber(string[]? args, out int port)
 		{
+			if (args is null)
+			{
+				port = -1;
+				return false;
+			}
+
 			if (args.Length < 1)
 			{
 				port = -1;
