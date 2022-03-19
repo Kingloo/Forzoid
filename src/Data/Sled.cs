@@ -15,7 +15,7 @@ namespace Forzoid.Data
 		/// </summary>
 		public bool IsRaceOn { get; set; } = false;
 
-		public uint TimestampMS { get; set; } = 0;
+		public int TimestampMs { get; set; } = 0;
 
 		public float EngineMaxRpm { get; set; } = 0f;
 		public float EngineIdleRpm { get; set; } = 0f;
@@ -220,7 +220,7 @@ namespace Forzoid.Data
 			int isRaceOnRaw = ToInt32(data.Slice(0, sizeof(int)));
 			sled.IsRaceOn = isRaceOnRaw == 1;
 
-			sled.TimestampMS = ToUInt32(data.Slice(4, sizeof(int)));
+			sled.TimestampMs = ToInt32(data.Slice(4, sizeof(int)));
 
 			sled.EngineMaxRpm = ToSingle(data.Slice(8, sizeof(float)));
 			sled.EngineIdleRpm = ToSingle(data.Slice(12, sizeof(float)));
