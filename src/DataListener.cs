@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
@@ -11,9 +10,6 @@ namespace Forzoid
 {
 	public class DataListener : IDisposable
 	{
-		private const int minPort = 1024;
-		private const int maxPort = 65535;
-
 		public const int DefaultPort = 50120;
 
 		private readonly IPEndPoint ipEndPoint;
@@ -29,19 +25,7 @@ namespace Forzoid
 
 		public DataListener(IPEndPoint endPoint)
 		{
-			if (endPoint is null)
-			{
-				throw new ArgumentNullException(nameof(endPoint));
-			}
-
-			if (endPoint.Port < minPort || endPoint.Port > maxPort)
-			{
-				string message = string.Format(CultureInfo.CurrentCulture, "port number must be between {0} and {1} (you provided {2})", minPort, maxPort, endPoint.Port);
-
-				throw new ArgumentOutOfRangeException(nameof(endPoint), message);
-			}
-
-			ipEndPoint = endPoint;
+			ipEndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
 			udpClient = new UdpClient(endPoint);
 		}
 
