@@ -24,7 +24,7 @@ namespace Sample
 
 		public static async Task<int> Main(string[] args)
 		{
-			int port = TrySetPortNumber(args, out int p) ? p : DataListener.DefaultPort;
+			int port = int.TryParse(args[0], out int p) ? p : DataListener.DefaultPort;
 
 			IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
 
@@ -65,38 +65,6 @@ namespace Sample
 			Console.WriteLine(" - exited!");
 
 			return 0;
-		}
-
-		private static bool TrySetPortNumber(string[]? args, out int port)
-		{
-			if (args is null)
-			{
-				port = -1;
-				return false;
-			}
-
-			if (args.Length < 1)
-			{
-				port = -1;
-				return false;
-			}
-
-			if (!int.TryParse(args[0], out int newPort))
-			{
-				port = -1;
-				return false;
-			}
-
-			if (newPort < 1024 || newPort > 65535)
-			{
-				Console.Error.WriteLine($"!! port number ({newPort}) must be >=1024 and <=65535");
-
-				port = -1;
-				return false;
-			}
-
-			port = newPort;
-			return true;
 		}
 	}
 }
