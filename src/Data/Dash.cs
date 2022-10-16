@@ -115,17 +115,17 @@ namespace Forzoid.Data
 			ushort lapNumber = ToUInt16(data.Slice(300, sizeof(ushort)));
 
 			dash.LapNumber = Convert.ToInt32(lapNumber) + 1;
-			dash.RacePosition = (int)data[302];
+			dash.RacePosition = data[302];
 
-			dash.Accel = (int)data[303];
-			dash.Brake = (int)data[304];
-			dash.Clutch = (int)data[305];
-			dash.HandBrake = (int)data[306];
-			dash.Gear = (int)data[307];
-			dash.Steer = (int)data[308];
+			dash.Accel = data[303];
+			dash.Brake = data[304];
+			dash.Clutch = data[305];
+			dash.HandBrake = data[306];
+			dash.Gear = data[307];
+			dash.Steer = data[308];
 
-			dash.NormalizedDrivingLine = (int)data[309];
-			dash.NormalizedAIBrakeDifference = (int)data[310];
+			dash.NormalizedDrivingLine = data[309];
+			dash.NormalizedAIBrakeDifference = data[310];
 
 			return dash;
 		}
