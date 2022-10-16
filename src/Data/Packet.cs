@@ -15,7 +15,7 @@ namespace Forzoid.Data
 
 		public Packet(IPEndPoint endPoint)
 		{
-			EndPoint = endPoint;
+			EndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
 		}
 
 		public static Packet Empty => new Packet();
@@ -53,7 +53,7 @@ namespace Forzoid.Data
 			=> game switch
 			{
 				Game.ForzaHorizon4 => PrepareForForzaHorizon4(data),
-				Game.ForzaHorizon5 => throw new NotImplementedException("Forza Horizon 5 is not supported (yet)"),
+				Game.ForzaHorizon5 => PrepareForForzaHorizon5(data),
 				Game.ForzaMotorsport7 => PrepareForForzaMotorsport7(data),
 				_ => ReadOnlySpan<byte>.Empty
 			};
@@ -92,7 +92,7 @@ namespace Forzoid.Data
 
 			byte[] contiguous = new byte[fm7SledLength + fm7DashLength];
 
-			byte[] fm7Sled = data.Slice(0, fm7SledLength).ToArray();
+			byte[] fm7Sled = data[..fm7SledLength].ToArray();
 			byte[] fm7Dash = data.Slice(244, fm7DashLength).ToArray();
 
 			Array.Copy(fm7Sled, 0, contiguous, 0, fm7SledLength);
@@ -103,5 +103,8 @@ namespace Forzoid.Data
 
 			return contiguous.AsSpan();
 		}
+
+		private static ReadOnlySpan<byte> PrepareForForzaHorizon5(ReadOnlySpan<byte> data)
+			=> PrepareForForzaHorizon4(data);
 	}
 }
