@@ -217,7 +217,7 @@ namespace Forzoid.Data
 
 			Sled sled = new Sled();
 
-			int isRaceOnRaw = ToInt32(data.Slice(0, sizeof(int)));
+			int isRaceOnRaw = ToInt32(data[..sizeof(int)]);
 			sled.IsRaceOn = isRaceOnRaw == 1;
 
 			sled.TimestampMs = ToInt32(data.Slice(4, sizeof(int)));
