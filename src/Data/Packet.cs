@@ -72,6 +72,8 @@ namespace Forzoid.Data
 
                 https://forums.forzamotorsport.net/turn10_postsm1086008_Data-Output.aspx#post_1086008
 
+					update 2023.10.02: above forum thread no longer exists
+
                 a Forza Horizon 4 packet has some unknown data
 
                 [0]-[231] FM7 Sled data (as mentioned before)
