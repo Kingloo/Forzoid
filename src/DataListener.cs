@@ -25,19 +25,22 @@ namespace Forzoid
 
 		public DataListener(IPEndPoint endPoint)
 		{
-			ipEndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
+			ArgumentNullException.ThrowIfNull(endPoint);
+
+			ipEndPoint = endPoint;
+			
 			udpClient = new UdpClient(endPoint);
 		}
 
 		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken cancellationToken)
 		{
-			cancellationToken.Register(() => udpClient.Close());
-
-			UdpReceiveResult result = default;
+			cancellationToken.Register(udpClient.Close);
 
 			while (true)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
+
+				UdpReceiveResult result;
 
 				try
 				{
