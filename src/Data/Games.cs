@@ -6,6 +6,7 @@ namespace Forzoid.Data
 		ForzaHorizon4,
 		ForzaHorizon5,
 		ForzaMotorsport7,
+		ForzaMotorsport2023,
 		Unknown
 	}
 }

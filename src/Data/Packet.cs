@@ -15,13 +15,18 @@ namespace Forzoid.Data
 
 		public Packet(IPEndPoint endPoint)
 		{
-			EndPoint = endPoint ?? throw new ArgumentNullException(nameof(endPoint));
+			ArgumentNullException.ThrowIfNull(endPoint);
+
+			EndPoint = endPoint;
 		}
 
 		public static Packet Empty => new Packet();
 
 		public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, [NotNullWhen(true)] out Packet? packet)
 		{
+			ArgumentNullException.ThrowIfNull(data);
+			ArgumentNullException.ThrowIfNull(endPoint);
+
 			if (data.Length == 0)
 			{
 				packet = null;
@@ -55,15 +60,9 @@ namespace Forzoid.Data
 				Game.ForzaHorizon4 => PrepareForForzaHorizon4(data),
 				Game.ForzaHorizon5 => PrepareForForzaHorizon5(data),
 				Game.ForzaMotorsport7 => PrepareForForzaMotorsport7(data),
+				Game.ForzaMotorsport2023 => PrepareForForzaMotorsport2023(data),
 				_ => ReadOnlySpan<byte>.Empty
 			};
-
-		private static ReadOnlySpan<byte> PrepareForForzaMotorsport7(ReadOnlySpan<byte> data)
-		{
-			// a Forza Motorsport 7 packet is contiguous, no unknown data and no gaps
-
-			return data;
-		}
 
 		private static ReadOnlySpan<byte> PrepareForForzaHorizon4(ReadOnlySpan<byte> data)
 		{
@@ -108,5 +107,15 @@ namespace Forzoid.Data
 
 		private static ReadOnlySpan<byte> PrepareForForzaHorizon5(ReadOnlySpan<byte> data)
 			=> PrepareForForzaHorizon4(data);
+
+		private static ReadOnlySpan<byte> PrepareForForzaMotorsport7(ReadOnlySpan<byte> data)
+		{
+			// a Forza Motorsport 7 packet is contiguous, no unknown data and no gaps
+
+			return data;
+		}
+
+		private static ReadOnlySpan<byte> PrepareForForzaMotorsport2023(ReadOnlySpan<byte> data)
+			=> PrepareForForzaMotorsport7(data);
 	}
 }

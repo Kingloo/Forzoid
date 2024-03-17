@@ -11,7 +11,8 @@ namespace Forzoid.Data
 			=> packet.Length switch
 			{
 				0 => Game.None,
-				311 => Game.ForzaMotorsport7,
+				// 311 => Game.ForzaMotorsport7, // can't have same switch value twice, default to FM2023
+				311 => Game.ForzaMotorsport2023,
 				324 => Game.ForzaHorizon4,
 				_ => Game.Unknown
 			};
