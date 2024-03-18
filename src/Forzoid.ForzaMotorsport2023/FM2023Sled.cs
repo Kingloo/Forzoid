@@ -190,6 +190,8 @@ namespace Forzoid.ForzaMotorsport2023
 		/// Unique ID of the car make/model
 		/// </summary>
 		public int CarOrdinal { get; set; } = 0;
+		public string CarName { get => FM2023DataHelpers.DetermineCarName(CarOrdinal); }
+
 		public FM2023CarClass CarClass { get; set; } = FM2023CarClass.None;
 		/// <summary>
 		/// Between 100 (slowest car) and 999 (fastest car) inclusive
