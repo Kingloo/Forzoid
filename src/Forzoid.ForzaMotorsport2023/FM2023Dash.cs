@@ -30,22 +30,13 @@ namespace Forzoid.ForzaMotorsport2023
 		public float Boost { get; set; } = 0f;
 		public float Fuel { get; set; } = 0f;
 		public float DistanceTraveled { get; set; } = 0f;
-		/// <summary>
-		/// In seconds
-		/// </summary>
-		public float BestLap { get; set; } = 0f;
+		public TimeSpan BestLap { get; set; } = TimeSpan.Zero;
 		/// <summary>
 		/// In seconds
 		/// </summary>
 		public float LastLap { get; set; } = 0f;
-		/// <summary>
-		/// In seconds
-		/// </summary>
-		public float CurrentLapTime { get; set; } = 0f;
-		/// <summary>
-		/// In seconds
-		/// </summary>
-		public float CurrentRaceTime { get; set; } = 0f;
+		public TimeSpan CurrentLapTime { get; set; } = TimeSpan.Zero;
+		public TimeSpan CurrentRaceTime { get; set; } = TimeSpan.Zero;
 
 		public int LapNumber { get; set; } = 0;
 		public int RacePosition { get; set; } = 0;
@@ -59,6 +50,12 @@ namespace Forzoid.ForzaMotorsport2023
 
 		public int NormalizedDrivingLine { get; set; } = sbyte.MinValue;
 		public int NormalizedAIBrakeDifference { get; set; } = sbyte.MinValue;
+
+		/// <summary>
+		/// ID for track
+		/// </summary>
+		public int TrackOrdinal { get; set; } = 0;
+		public string TrackName { get => FM2023DataHelpers.DetermineTrackName(TrackOrdinal); }
 
 		public FM2023Dash() { }
 
@@ -91,10 +88,13 @@ namespace Forzoid.ForzaMotorsport2023
 			dash.Boost = ToSingle(data.Slice(272, sizeof(float)));
 			dash.Fuel = ToSingle(data.Slice(276, sizeof(float)));
 			dash.DistanceTraveled = ToSingle(data.Slice(280, sizeof(float)));
-			dash.BestLap = ToSingle(data.Slice(284, sizeof(float)));
+			// dash.BestLap = ToSingle(data.Slice(284, sizeof(float)));
+			dash.BestLap = TimeSpan.FromSeconds(Convert.ToDouble(ToSingle(data.Slice(284, sizeof(float))))); // ToSingle(data.Slice(284, sizeof(float)));
 			dash.LastLap = ToSingle(data.Slice(288, sizeof(float)));
-			dash.CurrentLapTime = ToSingle(data.Slice(292, sizeof(float)));
-			dash.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
+			// dash.CurrentLapTime = ToSingle(data.Slice(292, sizeof(float)));
+			dash.CurrentLapTime = TimeSpan.FromSeconds(Convert.ToDouble(ToSingle(data.Slice(292, sizeof(float))))); // ToSingle(data.Slice(292, sizeof(float)));
+			// dash.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
+			dash.CurrentRaceTime = TimeSpan.FromSeconds(Convert.ToDouble(ToSingle(data.Slice(296, sizeof(float))))); //ToSingle(data.Slice(296, sizeof(float)));
 
 			/*
                 per the ForzaMotorsport.net forums, LapNumber is a ushort that reports lap 1 as lap 0
@@ -125,6 +125,13 @@ namespace Forzoid.ForzaMotorsport2023
 
 			dash.NormalizedDrivingLine = data[309];
 			dash.NormalizedAIBrakeDifference = data[310];
+
+			// 311 TireWearFrontLeft float
+			// 315 TireWearFrontRight float
+			// 319 TireWearRearLeft float
+			// 323 TireWearRearRight float
+
+			dash.TrackOrdinal = ToInt32(data.Slice(327, sizeof(int)));
 
 			return dash;
 		}
