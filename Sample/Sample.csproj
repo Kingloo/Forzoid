@@ -6,6 +6,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\src\Forzoid.Common\Forzoid.Common.csproj" AdditionalProperties="TargetFramework=net8.0" />
+		<ProjectReference Include="..\src\Forzoid.ForzaMotorsport2023\Forzoid.ForzaMotorsport2023.csproj" AdditionalProperties="TargetFramework=net8.0" />
 	</ItemGroup>
 
 </Project>

@@ -3,5 +3,9 @@
 	<PropertyGroup>
 		<OutputType>library</OutputType>
 	</PropertyGroup>
-	
+
+	<ItemGroup>
+		<ProjectReference Include="..\Forzoid.Common\Forzoid.Common.csproj" />	
+	</ItemGroup>
+
 </Project>

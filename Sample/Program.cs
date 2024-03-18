@@ -4,40 +4,26 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Forzoid.Common;
+using Forzoid.ForzaMotorsport2023;
 
 namespace Sample
 {
 	public static class Program
 	{
-		/*
-            dotnet run {1234}
-                or
-            dotnet .\Sample.dll {1234}
-                or
-            .\Sample.exe {1234}
-                or
-            .\Sample {1234}
-
-            depending on how you built/published
-        */
-
 		public static async Task<int> Main(string[] args)
 		{
-			int port = DataListener.DefaultPort;
-
-			if (args.Length > 0 && int.TryParse(args[0], out int p))
-			{
-				port = p;
-			}
+			int port = ForzoidUdpClient.DefaultPort;
 
 			IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
 
-			using DataListener listener = new DataListener(endPoint);
+			using FM2023DataListener listener = new FM2023DataListener(endPoint);
 			using CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-			Console.CancelKeyPress += (s, e) =>
+			Console.CancelKeyPress += (object? s, ConsoleCancelEventArgs e) =>
 			{
 				e.Cancel = true;
+
+				Console.WriteLine("CTRL-C");
 
 				tokenSource.Cancel();
 			};
@@ -50,34 +36,56 @@ namespace Sample
 			}
 			catch (OperationCanceledException)
 			{
-				Console.WriteLine("cancelled");
+				Console.WriteLine("stopped");
 			}
 
 			return 0;
 		}
 
-		private static async ValueTask ListenForPacketsAsync(DataListener dataListener, CancellationToken cancellationToken)
+		private static async ValueTask ListenForPacketsAsync(FM2023DataListener dataListener, CancellationToken cancellationToken)
 		{
+			float currentBestLap = 0.0f;
+			
 			StringBuilder sb = new StringBuilder();
 
-			await foreach (Packet packet in dataListener.ListenAsync(cancellationToken))
+			await foreach (FM2023Packet packet in dataListener.ListenAsync(cancellationToken).ConfigureAwait(false))
 			{
-				if (packet.EndPoint is null
-					|| packet.Dash is null)
+				string message = CreateConsoleMessage(sb, packet);
+
+				if (packet.Dash.BestLap > currentBestLap)
 				{
-					continue;
+					await Console.Out.WriteLineAsync("new best lap!").ConfigureAwait(false);
+
+					currentBestLap = packet.Dash.BestLap;
 				}
 
-				sb.Append($"{packet.Game.ToString()} - ");
-				sb.Append($"{packet.EndPoint.Address}:{packet.EndPoint.Port} - ");
-				sb.Append($"pos.: {packet.Dash.RacePosition} - ");
-				sb.Append($"lap: {packet.Dash.LapNumber} - ");
-				sb.Append($"cur. race time: {packet.Dash.CurrentRaceTime}");
-
-				await Console.Out.WriteLineAsync(sb.ToString().AsMemory(), cancellationToken).ConfigureAwait(false);
+				await Console.Out.WriteLineAsync(message.AsMemory(), cancellationToken).ConfigureAwait(false);
 
 				sb.Clear();
 			}
+		}
+
+		private static string CreateConsoleMessage(StringBuilder sb, FM2023Packet packet)
+		{
+			const string SpaceHyphenSpace = " - ";
+
+			sb.Append(packet.Game.FullName);
+			sb.Append(SpaceHyphenSpace);
+			sb.Append(packet.RawPacket.Source);
+			sb.Append(SpaceHyphenSpace);
+			sb.Append(packet.Sled.IsRaceOn ? "ON" : "PAUSED");
+			
+			if (packet.Sled.IsRaceOn)
+			{
+				sb.Append(SpaceHyphenSpace);
+				sb.Append(packet.Dash.RacePosition);
+				sb.Append(SpaceHyphenSpace);
+				sb.Append(packet.Dash.CurrentLapTime);
+				sb.Append(SpaceHyphenSpace);
+				sb.Append(packet.Dash.BestLap);
+			}
+
+			return sb.ToString();
 		}
 	}
 }

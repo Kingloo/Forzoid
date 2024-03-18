@@ -1,15 +1,11 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-namespace Forzoid.Common
+namespace Forzoid.Common.Fred
 {
 	public class Packet
 	{
 		public IPEndPoint? EndPoint { get; } = null;
-		public Game Game { get; set; } = Game.None;
-		public Sled? Sled { get; set; } = null;
-		public Dash? Dash { get; set; } = null;
 
 		public Packet() { }
 
@@ -21,48 +17,6 @@ namespace Forzoid.Common
 		}
 
 		public static Packet Empty => new Packet();
-
-		public static bool TryCreate(ReadOnlyMemory<byte> data, IPEndPoint endPoint, [NotNullWhen(true)] out Packet? packet)
-		{
-			ArgumentNullException.ThrowIfNull(data);
-			ArgumentNullException.ThrowIfNull(endPoint);
-
-			if (data.Length == 0)
-			{
-				packet = null;
-				return false;
-			}
-
-			Game game = DataHelpers.DetermineGame(data.Span);
-
-			ReadOnlySpan<byte> adjusted = PreparePacket(game, data.Span);
-
-			if (Sled.Create(adjusted) is Sled sled
-				&& Dash.Create(adjusted) is Dash dash)
-			{
-				packet = new Packet(endPoint)
-				{
-					Game = game,
-					Sled = sled,
-					Dash = dash
-				};
-
-				return true;
-			}
-
-			packet = null;
-			return false;
-		}
-
-		private static ReadOnlySpan<byte> PreparePacket(Game game, ReadOnlySpan<byte> data)
-			=> game switch
-			{
-				Game.ForzaHorizon4 => PrepareForForzaHorizon4(data),
-				Game.ForzaHorizon5 => PrepareForForzaHorizon5(data),
-				Game.ForzaMotorsport7 => PrepareForForzaMotorsport7(data),
-				Game.ForzaMotorsport2023 => PrepareForForzaMotorsport2023(data),
-				_ => ReadOnlySpan<byte>.Empty
-			};
 
 		private static ReadOnlySpan<byte> PrepareForForzaHorizon4(ReadOnlySpan<byte> data)
 		{
@@ -104,18 +58,5 @@ namespace Forzoid.Common
 
 			return contiguous.AsSpan();
 		}
-
-		private static ReadOnlySpan<byte> PrepareForForzaHorizon5(ReadOnlySpan<byte> data)
-			=> PrepareForForzaHorizon4(data);
-
-		private static ReadOnlySpan<byte> PrepareForForzaMotorsport7(ReadOnlySpan<byte> data)
-		{
-			// a Forza Motorsport 7 packet is contiguous, no unknown data and no gaps
-
-			return data;
-		}
-
-		private static ReadOnlySpan<byte> PrepareForForzaMotorsport2023(ReadOnlySpan<byte> data)
-			=> PrepareForForzaMotorsport7(data);
 	}
 }

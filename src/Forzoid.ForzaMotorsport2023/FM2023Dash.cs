@@ -1,14 +1,9 @@
 using System;
-
-#if NETSTANDARD2_0
-using static Forzoid.Data.DataHelpers;
-#else
 using static System.BitConverter;
-#endif
 
-namespace Forzoid.Data
+namespace Forzoid.ForzaMotorsport2023
 {
-	public class Dash
+	public class FM2023Dash
 	{
 		public float PositionX { get; set; } = 0f;
 		public float PositionY { get; set; } = 0f;
@@ -46,7 +41,7 @@ namespace Forzoid.Data
 		/// <summary>
 		/// In seconds
 		/// </summary>
-		public float CurrentLap { get; set; } = 0f;
+		public float CurrentLapTime { get; set; } = 0f;
 		/// <summary>
 		/// In seconds
 		/// </summary>
@@ -65,16 +60,20 @@ namespace Forzoid.Data
 		public int NormalizedDrivingLine { get; set; } = sbyte.MinValue;
 		public int NormalizedAIBrakeDifference { get; set; } = sbyte.MinValue;
 
-		public Dash() { }
+		public FM2023Dash() { }
 
-		public static Dash Create(ReadOnlySpan<byte> data)
+		public readonly static FM2023Dash Empty = new FM2023Dash();
+
+		internal static FM2023Dash Create(ReadOnlySpan<byte> data)
 		{
 			if (data.Length == 0)
 			{
-				return new Dash();
+				return FM2023Dash.Empty;
 			}
 
-			Dash dash = new Dash();
+#pragma warning disable IDE0017 // object initialization can be simplified
+			FM2023Dash dash = new FM2023Dash();
+#pragma warning restore IDE0017 // object initialization can be simplified
 
 			dash.PositionX = ToSingle(data.Slice(232, sizeof(float)));
 			dash.PositionY = ToSingle(data.Slice(236, sizeof(float)));
@@ -94,7 +93,7 @@ namespace Forzoid.Data
 			dash.DistanceTraveled = ToSingle(data.Slice(280, sizeof(float)));
 			dash.BestLap = ToSingle(data.Slice(284, sizeof(float)));
 			dash.LastLap = ToSingle(data.Slice(288, sizeof(float)));
-			dash.CurrentLap = ToSingle(data.Slice(292, sizeof(float)));
+			dash.CurrentLapTime = ToSingle(data.Slice(292, sizeof(float)));
 			dash.CurrentRaceTime = ToSingle(data.Slice(296, sizeof(float)));
 
 			/*

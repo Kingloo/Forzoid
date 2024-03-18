@@ -1,14 +1,10 @@
 using System;
-
-#if NETSTANDARD2_0
-using static Forzoid.Data.DataHelpers;
-#else
+using Forzoid.Common;
 using static System.BitConverter;
-#endif
 
-namespace Forzoid.Data
+namespace Forzoid.ForzaMotorsport2023
 {
-	public class Sled
+	public class FM2023Sled
 	{
 		/// <summary>
 		/// IsRaceOn returns True when in the open world in Forza Horizon.
@@ -194,28 +190,29 @@ namespace Forzoid.Data
 		/// Unique ID of the car make/model
 		/// </summary>
 		public int CarOrdinal { get; set; } = 0;
-		public CarClass CarClass { get; set; } = CarClass.None;
+		public FM2023CarClass CarClass { get; set; } = FM2023CarClass.None;
 		/// <summary>
 		/// Between 100 (slowest car) and 999 (fastest car) inclusive
 		/// </summary>
 		public int CarPerformanceIndex { get; set; } = 0;
-		public DrivetrainType DrivetrainType { get; set; } = DrivetrainType.None;
+		public Drivetrain Drivetrain { get; set; } = Drivetrain.None;
 		/// <summary>
 		/// Number of cylinders in the engine
 		/// </summary>
 		public int NumCylinders { get; set; } = 0;
 
+		public FM2023Sled() { }
 
-		public Sled() { }
+		public readonly static FM2023Sled Empty = new FM2023Sled();
 
-		internal static Sled? Create(ReadOnlySpan<byte> data)
+		internal static FM2023Sled Create(ReadOnlySpan<byte> data)
 		{
 			if (data.Length == 0)
 			{
-				return null;
+				return FM2023Sled.Empty;
 			}
 
-			Sled sled = new Sled();
+			FM2023Sled sled = new FM2023Sled();
 
 			int isRaceOnRaw = ToInt32(data[..sizeof(int)]);
 			sled.IsRaceOn = isRaceOnRaw == 1;
@@ -290,12 +287,12 @@ namespace Forzoid.Data
 			sled.CarOrdinal = ToInt32(data.Slice(212, sizeof(int)));
 
 			int carClassRaw = ToInt32(data.Slice(216, sizeof(int)));
-			sled.CarClass = DataHelpers.DetermineCarClass(carClassRaw);
+			sled.CarClass = FM2023DataHelpers.DetermineCarClass(carClassRaw);
 
 			sled.CarPerformanceIndex = ToInt32(data.Slice(220, sizeof(int)));
 
 			int drivetrainTypeRaw = ToInt32(data.Slice(224, sizeof(int)));
-			sled.DrivetrainType = DataHelpers.DetermineDrivetrainType(drivetrainTypeRaw);
+			sled.Drivetrain = FM2023DataHelpers.DetermineDrivetrain(drivetrainTypeRaw);
 
 			sled.NumCylinders = ToInt32(data.Slice(228, sizeof(int)));
 
