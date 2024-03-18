@@ -5,7 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\src\Forzoid.csproj" AdditionalProperties="TargetFramework=net8.0" />
+		<ProjectReference Include="..\src\Forzoid.Common\Forzoid.Common.csproj" AdditionalProperties="TargetFramework=net8.0" />
 	</ItemGroup>
 
 </Project>

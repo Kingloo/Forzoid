@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-namespace Forzoid.Data
+namespace Forzoid.Common
 {
 	public class Packet
 	{

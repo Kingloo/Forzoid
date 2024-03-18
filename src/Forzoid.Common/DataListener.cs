@@ -4,9 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Forzoid.Data;
 
-namespace Forzoid
+namespace Forzoid.Common
 {
 	public class DataListener : IDisposable
 	{
@@ -28,7 +27,7 @@ namespace Forzoid
 			ArgumentNullException.ThrowIfNull(endPoint);
 
 			ipEndPoint = endPoint;
-			
+
 			udpClient = new UdpClient(endPoint);
 		}
 
