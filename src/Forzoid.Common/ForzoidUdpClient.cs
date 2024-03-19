@@ -27,7 +27,7 @@ namespace Forzoid.Common
 			while (true)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
-				
+
 				UdpReceiveResult result = await udpClient.ReceiveAsync(cancellationToken).ConfigureAwait(false);
 
 				yield return new Packet(result.RemoteEndPoint, localEndPoint, result.Buffer);

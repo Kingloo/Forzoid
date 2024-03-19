@@ -15,7 +15,7 @@ namespace Forzoid.ForzaMotorsport2023
 			ArgumentNullException.ThrowIfNull(make);
 			ArgumentNullException.ThrowIfNull(model);
 			ArgumentOutOfRangeException.ThrowIfNegative(releaseYear);
-			
+
 			Ordinal = ordinal;
 			Make = make;
 			Model = model;

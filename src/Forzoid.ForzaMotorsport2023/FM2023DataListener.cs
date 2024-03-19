@@ -11,7 +11,7 @@ namespace Forzoid.ForzaMotorsport2023
 	public class FM2023DataListener : IDisposable
 	{
 		private readonly ForzoidUdpClient udpClient;
-		
+
 		public FM2023DataListener(IPEndPoint localEndPoint)
 		{
 			ArgumentNullException.ThrowIfNull(localEndPoint);
