@@ -190,7 +190,12 @@ namespace Forzoid.ForzaMotorsport2023
 		/// Unique ID of the car make/model
 		/// </summary>
 		public int CarOrdinal { get; set; } = 0;
-		public string CarName { get => FM2023DataHelpers.DetermineCarName(CarOrdinal); }
+		public FM2023Car Car
+		{
+			get => FM2023Data.Cars.TryGetValue(CarOrdinal, out FM2023Car? car)
+				? car
+				: new FM2023Car(CarOrdinal, "unknown", "unknown", 0);
+		}
 
 		public FM2023CarClass CarClass { get; set; } = FM2023CarClass.None;
 		/// <summary>

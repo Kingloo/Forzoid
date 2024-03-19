@@ -1,4 +1,3 @@
-using System.Globalization;
 using Forzoid.Common;
 
 namespace Forzoid.ForzaMotorsport2023
@@ -30,42 +29,6 @@ namespace Forzoid.ForzaMotorsport2023
 				1 => Drivetrain.RWD,
 				2 => Drivetrain.AWD,
 				_ => Drivetrain.Unknown
-			};
-		}
-
-		internal static string DetermineCarName(int value)
-		{
-			// 
-
-			return value switch
-			{
-				247 => "Toyota 2000GT (1969)",
-				316 => "Lamborghini Countach LP5000 QV (1988)",
-				2038 => "Alfa Romeo 4C (2014)",
-				_ => value.ToString(CultureInfo.InvariantCulture)
-			};
-		}
-
-		internal static string DetermineTrackName(int value)
-		{
-			// 
-			
-			return value switch
-			{
-				0 => "Laguna Seca",
-				67 => "Maple Valley",
-				68 => "Maple Valley (Short)",
-				250 => "Hockenheimring",
-				252 => "Hockenheimring (Short)",
-				530 => "Circuit de Spa-Francorchamps",
-				870 => "Watkins Glen International Speedway",
-				883 => "Lime Rock Park (Alt)",
-				991 => "Virginia International Raceway (North)",
-				1110 => "Homestead-Miami Speedway",
-				1111 => "Homestead-Miami Speedway (Road)",
-				1590 => "Kyalami Grand Prix Circuit",
-				1631 => "Grank Oak Raceway (Club)",
-				_ => value.ToString(CultureInfo.InvariantCulture)
 			};
 		}
 	}
