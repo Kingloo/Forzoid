@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Forzoid.Common;
 using Forzoid.ForzaMotorsport2023;
 
@@ -11,6 +12,9 @@ namespace Sample
 {
 	public static class Program
 	{
+		private readonly static TimeSpan warningThreshold = TimeSpan.FromSeconds(3d);
+		private static DateTimeOffset mosetRecentPacketArrived = DateTimeOffset.MinValue;
+
 		public static async Task<int> Main(string[] args)
 		{
 			int port = ForzoidUdpClient.DefaultPort;
@@ -45,17 +49,29 @@ namespace Sample
 
 		private static async ValueTask ListenForPacketsAsync(FM2023DataListener dataListener, CancellationToken cancellationToken)
 		{
+			System.Timers.Timer warningTimer = new System.Timers.Timer(warningThreshold)
+			{
+				AutoReset = true,
+				Enabled = true
+			};
+
+			warningTimer.Elapsed += OnWarningThreshold;
+
+			warningTimer.Start();
+
 			TimeSpan currentBestLap = TimeSpan.Zero;
 
 			StringBuilder sb = new StringBuilder();
 
 			await foreach (FM2023Packet packet in dataListener.ListenAsync(cancellationToken).ConfigureAwait(false))
 			{
+				mosetRecentPacketArrived = DateTimeOffset.UtcNow;
+
 				string message = CreateConsoleMessage(sb, packet);
 
 				if (packet.Dash.BestLap > currentBestLap)
 				{
-					await Console.Out.WriteLineAsync("new best lap!").ConfigureAwait(false);
+					await Console.Out.WriteLineAsync("new best lap!".AsMemory(), cancellationToken).ConfigureAwait(false);
 
 					currentBestLap = packet.Dash.BestLap;
 				}
@@ -64,11 +80,39 @@ namespace Sample
 
 				sb.Clear();
 			}
+
+			if (warningTimer.Enabled)
+			{
+				warningTimer.Stop();
+			}
+
+			warningTimer.Elapsed -= OnWarningThreshold;
+
+			warningTimer.Dispose();
+		}
+
+		private static void OnWarningThreshold(object? sender, ElapsedEventArgs e)
+		{
+			if (DateTimeOffset.UtcNow - mosetRecentPacketArrived > warningThreshold)
+			{
+				Task.Run(async () => await OnWarningThresholdAsync(sender, e).ConfigureAwait(false))
+					.ContinueWith(
+						(Task task) => Console.Error.WriteLine($"FM2023DataListener.OnWarningThresholdAsync threw '{task.Exception?.GetType().Name}'"),
+						TaskContinuationOptions.OnlyOnFaulted
+					);
+			}
+		}
+
+		private static async Task OnWarningThresholdAsync(object? sender, ElapsedEventArgs e)
+		{
+			await Console.Error.WriteLineAsync(
+				$"no packets for {warningThreshold.TotalSeconds} seconds".AsMemory(),
+				CancellationToken.None)
+			.ConfigureAwait(false);
 		}
 
 		private static string CreateConsoleMessage(StringBuilder sb, FM2023Packet packet)
 		{
-			// const string Separator = " - ";
 			const string Separator = " | ";
 
 			sb.Append(packet.Game.ShortName);
@@ -77,7 +121,7 @@ namespace Sample
 			sb.Append(Separator);
 			sb.Append(packet.Sled.IsRaceOn ? "RACING" : "IN MENUS");
 
-			// FM2023 | 192.68.0.52:5200 | {RACING|IN MENUS} | Maple Valley (Full) | Toyota 2000GT (1969) B 600 | lap 1 | 1st | 00:00:12.345 | 00:00:11.999
+// FM2023 | 192.68.0.52:5200 | {RACING|IN MENUS} | Maple Valley - Full Circuit | Toyota 2000GT (1969) | B 600 | lap 1 | 1st | 00:00:12.345 | 00:00:11.999
 
 			if (packet.Sled.IsRaceOn)
 			{
