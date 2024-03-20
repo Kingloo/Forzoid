@@ -24,7 +24,7 @@ namespace Forzoid.Common
 
 		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken cancellationToken)
 		{
-			while (true)
+			while (disposedValue == false)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 
