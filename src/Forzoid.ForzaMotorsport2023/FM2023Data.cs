@@ -9,12 +9,14 @@ namespace Forzoid.ForzaMotorsport2023
 			{ 247,	new FM2023Car(247,	"Toyota", "2000GT", 1969) },
 			{ 316,	new FM2023Car(316,	"Lamborghini", "Countach LP5000 QV", 1988) },
 			{ 323,	new FM2023Car(323,	"Lancia", "Delta HF Integrale EVO", 1992) },
+			{ 445,	new FM2023Car(445,	"Nissan", "Skyline GT-R V-Spec II", 2002) },
 			{ 1171,	new FM2023Car(1171,	"Ferrari", "599XX", 2010) },
 			{ 2034,	new FM2023Car(2034,	"Ferrari", "LaFerrari", 2013) },
 			{ 2038,	new FM2023Car(2038,	"Alfa Romeo", "4C", 2014) },
 			{ 2103,	new FM2023Car(2103,	"BMW", "#6 M1 Procar", 1979) },
 			{ 2184,	new FM2023Car(2184,	"Ferrari", "458 S", 0) },
-			{ 2968,	new FM2023Car(2968,	"Aston Martin", "Valkyrie", 2023) }
+			{ 2968,	new FM2023Car(2968,	"Aston Martin", "Valkyrie", 2023) },
+			{ 3724,	new FM2023Car(3724,	"Ferrari", "296 GTB", 2022) }
 		};
 
 		internal readonly static IDictionary<int, FM2023Track> Tracks = new Dictionary<int, FM2023Track>
@@ -25,6 +27,8 @@ namespace Forzoid.ForzaMotorsport2023
 			{ 22,	new FM2023Track(22,		"Silverstone Racing Circuit", "National Circuit") },
 			{ 23,	new FM2023Track(23,		"Silverstone Racing Circuit", "International Circuit") },
 			{ 32,	new FM2023Track(32,		"Nürburgring", "Nordschleife") },
+			{ 33,	new FM2023Track(33,		"Nürburgring", "Grand Prix Circuit") },
+			{ 34,	new FM2023Track(34,		"Nürburgring", "Sprint Circuit") },
 			{ 35,	new FM2023Track(35,		"Mugello Circuit", "Full Circuit") },
 			{ 37,	new FM2023Track(37,		"Suzuka Circuit", "Full Circuit") },
 			{ 38,	new FM2023Track(38,		"Suzuka Circuit", "East Circuit") },
@@ -34,6 +38,7 @@ namespace Forzoid.ForzaMotorsport2023
 			{ 110,	new FM2023Track(110,	"Circuit de Barcelona-Catalunya", "Grand Prix Circuit") },
 			{ 232,	new FM2023Track(232,	"Indianapolis Motor Speedway", "Grand Prix Circuit") },
 			{ 250,	new FM2023Track(250,	"Hockenheimring", "Full Circuit") },
+			{ 251,	new FM2023Track(251,	"Hockenheimring", "National Circuit") },
 			{ 252,	new FM2023Track(252,	"Hockenheimring", "Short Circuit") },
 			{ 510,	new FM2023Track(510,	"Yas Marina Circuit", "Full Circuit") },
 			{ 511,	new FM2023Track(511,	"Yas Marina Circuit", "North Circuit") },
