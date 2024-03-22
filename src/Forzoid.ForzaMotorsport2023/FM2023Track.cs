@@ -21,9 +21,7 @@ namespace Forzoid.ForzaMotorsport2023
 
 		public override string ToString()
 		{
-			return String.Equals(Location, "unknown", StringComparison.OrdinalIgnoreCase)
-				? $"unknown ({Ordinal})"
-				: $"{Location} - {Variant}";
+			return $"{Location} - {Variant} ({Ordinal})";
 		}
 	}
 }
