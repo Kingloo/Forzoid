@@ -33,7 +33,7 @@ namespace Sample
 				tokenSource.Cancel();
 			};
 
-			Console.WriteLine($"begin listening for data on port {port}");
+			Console.WriteLine($"started listening for data on port {port}");
 
 			try
 			{
@@ -121,12 +121,16 @@ namespace Sample
 			sb.Append(Separator);
 			sb.Append(packet.Sled.IsRaceOn ? "RACING" : "IN MENUS");
 
-// FM2023 | 192.68.0.52:5200 | {RACING|IN MENUS} | Maple Valley - Full Circuit | Toyota 2000GT (1969) | B 600 | lap 1 | 1st | 00:00:12.345 | 00:00:11.999
+			// FM2023 | 192.68.0.52:5200 | {RACING|IN MENUS} | MAPLE VALLEY - Full Circuit | Toyota 2000GT | B 600 | lap 1 | 1st | 00:00:12.345 | 00:00:11.999
 
 			if (packet.Sled.IsRaceOn)
 			{
 				sb.Append(Separator);
-				sb.Append(packet.Dash.Track);
+				sb.Append(
+					String.Equals(packet.Dash.Track.Location, "unknown", StringComparison.OrdinalIgnoreCase)
+						? packet.Dash.Track
+						: $"{packet.Dash.Track.Location.ToUpper()} - {packet.Dash.Track.Variant}"
+					);
 				sb.Append(Separator);
 				sb.Append(packet.Sled.Car);
 				sb.Append(Separator);
