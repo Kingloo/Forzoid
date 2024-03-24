@@ -1,25 +1,25 @@
 using System;
 using Forzoid.Common;
 
-namespace Forzoid.ForzaHorizon4
+namespace Forzoid.ForzaHorizon5
 {
-	public class FH4Packet
+	public class FH5Packet
 	{
 		public Packet RawPacket { get; }
 		public IGame Game { get; }
 		// public FH4Dash Dash { get; init; }
 		// public FH4Sled Sled { get; init; }
 
-		public FH4Packet(Packet packet)
+		public FH5Packet(Packet packet)
 		{
 			ArgumentNullException.ThrowIfNull(packet);
 
 			RawPacket = packet;
 
 			Game = new Game(
-				fullName: "Forza Horizon 4",
-				shortName: "FH4",
-				releaseYear: 2018
+				fullName: "Forza Horizon 5",
+				shortName: "FH5",
+				releaseYear: 2021
 			);
 
 			// Dash = FH4Dash.Create(packet.Data.Span);

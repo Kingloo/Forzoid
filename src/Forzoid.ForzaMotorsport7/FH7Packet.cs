@@ -1,25 +1,25 @@
 using System;
 using Forzoid.Common;
 
-namespace Forzoid.ForzaHorizon4
+namespace Forzoid.ForzaMotorsport7
 {
-	public class FH4Packet
+	public class FM7Packet
 	{
 		public Packet RawPacket { get; }
 		public IGame Game { get; }
 		// public FH4Dash Dash { get; init; }
 		// public FH4Sled Sled { get; init; }
 
-		public FH4Packet(Packet packet)
+		public FM7Packet(Packet packet)
 		{
 			ArgumentNullException.ThrowIfNull(packet);
 
 			RawPacket = packet;
 
 			Game = new Game(
-				fullName: "Forza Horizon 4",
-				shortName: "FH4",
-				releaseYear: 2018
+				fullName: "Forza Motorsport 7",
+				shortName: "FM7",
+				releaseYear: 2017
 			);
 
 			// Dash = FH4Dash.Create(packet.Data.Span);
