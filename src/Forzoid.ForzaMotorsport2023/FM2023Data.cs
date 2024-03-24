@@ -22,6 +22,7 @@ namespace Forzoid.ForzaMotorsport2023
 		internal readonly static IDictionary<int, FM2023Track> Tracks = new Dictionary<int, FM2023Track>
 		{
 			{ 0,	new FM2023Track(0,		"Laguna Seca", "Full Circuit") },
+			{ 1,	new FM2023Track(1,		"Laguna Seca", "Short Circuit") },
 			{ 5,	new FM2023Track(5,		"Road America", "East Route") },
 			{ 21,	new FM2023Track(21,		"Silverstone Racing Circuit", "Grand Prix Circuit") },
 			{ 22,	new FM2023Track(22,		"Silverstone Racing Circuit", "National Circuit") },
@@ -36,6 +37,7 @@ namespace Forzoid.ForzaMotorsport2023
 			{ 68,	new FM2023Track(68,		"Maple Valley", "Short Circuit") },
 			{ 100,	new FM2023Track(100,	"Le Mans - Circuit International de la Sarthe", "") },
 			{ 110,	new FM2023Track(110,	"Circuit de Barcelona-Catalunya", "Grand Prix Circuit") },
+			{ 111,	new FM2023Track(111,	"Circuit de Barcelona-Catalunya", "National Circuit") },
 			{ 232,	new FM2023Track(232,	"Indianapolis Motor Speedway", "Grand Prix Circuit") },
 			{ 250,	new FM2023Track(250,	"Hockenheimring", "Full Circuit") },
 			{ 251,	new FM2023Track(251,	"Hockenheimring", "National Circuit") },
