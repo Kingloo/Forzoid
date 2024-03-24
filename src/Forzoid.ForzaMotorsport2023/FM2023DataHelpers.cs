@@ -1,3 +1,4 @@
+using System;
 using Forzoid.Common;
 
 namespace Forzoid.ForzaMotorsport2023
@@ -31,5 +32,12 @@ namespace Forzoid.ForzaMotorsport2023
 				_ => Drivetrain.Unknown
 			};
 		}
+
+#if NETSTANDARD2_0
+        internal static int ToInt32(ReadOnlySpan<byte> value) => System.BitConverter.ToInt32(value.ToArray(), 0);
+        internal static ushort ToUInt16(ReadOnlySpan<byte> value) => System.BitConverter.ToUInt16(value.ToArray(), 0);
+        internal static uint ToUInt32(ReadOnlySpan<byte> value) => System.BitConverter.ToUInt32(value.ToArray(), 0);
+        internal static float ToSingle(ReadOnlySpan<byte> value) => System.BitConverter.ToSingle(value.ToArray(), 0);
+#endif
 	}
 }

@@ -14,7 +14,10 @@ namespace Forzoid.ForzaMotorsport2023
 
 		public FM2023DataListener(IPEndPoint localEndPoint)
 		{
-			ArgumentNullException.ThrowIfNull(localEndPoint);
+			if (localEndPoint is null)
+			{
+				throw new ArgumentNullException(nameof(localEndPoint));
+			}
 
 			udpClient = new ForzoidUdpClient(localEndPoint);
 		}

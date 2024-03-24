@@ -1,5 +1,9 @@
 using System;
+#if NETSTANDARD2_0
+using static Forzoid.ForzaMotorsport2023.FM2023DataHelpers;
+#else
 using static System.BitConverter;
+#endif
 
 namespace Forzoid.ForzaMotorsport2023
 {

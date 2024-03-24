@@ -1,6 +1,10 @@
 using System;
 using Forzoid.Common;
+#if NETSTANDARD2_0
+using static Forzoid.ForzaMotorsport2023.FM2023DataHelpers;
+#else
 using static System.BitConverter;
+#endif
 
 namespace Forzoid.ForzaMotorsport2023
 {
@@ -221,7 +225,7 @@ namespace Forzoid.ForzaMotorsport2023
 
 			FM2023Sled sled = new FM2023Sled();
 
-			int isRaceOnRaw = ToInt32(data[..sizeof(int)]);
+			int isRaceOnRaw = ToInt32(data.Slice(0, sizeof(int)));
 			sled.IsRaceOn = isRaceOnRaw == 1;
 
 			sled.TimestampMs = ToInt32(data.Slice(4, sizeof(int)));

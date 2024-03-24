@@ -4,17 +4,32 @@ namespace Forzoid.ForzaMotorsport2023
 {
 	public class FM2023Car
 	{
-		public int Ordinal { get; init; }
-		public string Make { get; init; }
-		public string Model { get; init; }
-		public int ReleaseYear { get; init; }
+		public int Ordinal { get; }
+		public string Make { get; }
+		public string Model { get; }
+		public int ReleaseYear { get; }
 
 		public FM2023Car(int ordinal, string make, string model, int releaseYear)
 		{
-			ArgumentOutOfRangeException.ThrowIfLessThan(ordinal, -1);
-			ArgumentNullException.ThrowIfNull(make);
-			ArgumentNullException.ThrowIfNull(model);
-			ArgumentOutOfRangeException.ThrowIfNegative(releaseYear);
+			if (ordinal < -1)
+			{
+				throw new ArgumentOutOfRangeException(nameof(ordinal));
+			}
+
+			if (make is null)
+			{
+				throw new ArgumentNullException(nameof(make));
+			}
+
+			if (model is null)
+			{
+				throw new ArgumentNullException(nameof(model));
+			}
+
+			if (releaseYear < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(releaseYear));
+			}
 
 			Ordinal = ordinal;
 			Make = make;

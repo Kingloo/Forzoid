@@ -5,16 +5,22 @@ namespace Forzoid.Common
 {
 	public class Packet
 	{
-		public IPEndPoint Source { get; init; }
-		public IPEndPoint Destination { get; init; }
-		public ReadOnlyMemory<byte> Data { get; init; }
-		public DateTimeOffset ArrivalTime { get; init; }
+		public IPEndPoint Source { get; }
+		public IPEndPoint Destination { get; }
+		public ReadOnlyMemory<byte> Data { get; }
+		public DateTimeOffset ArrivalTime { get; }
 
 		public Packet(IPEndPoint source, IPEndPoint destination, ReadOnlyMemory<byte> data)
 		{
-			ArgumentNullException.ThrowIfNull(source);
-			ArgumentNullException.ThrowIfNull(destination);
-			ArgumentNullException.ThrowIfNull(data);
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			if (destination is null)
+			{
+				throw new ArgumentNullException(nameof(destination));
+			}
 
 			Source = source;
 			Destination = destination;

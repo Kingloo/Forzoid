@@ -12,7 +12,10 @@ namespace Forzoid.ForzaHorizon5
 
 		public FH5Packet(Packet packet)
 		{
-			ArgumentNullException.ThrowIfNull(packet);
+			if (packet is null)
+			{
+				throw new ArgumentNullException(nameof(packet));
+			}
 
 			RawPacket = packet;
 

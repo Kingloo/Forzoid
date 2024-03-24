@@ -16,7 +16,10 @@ namespace Forzoid.Common
 
 		public ForzoidUdpClient(IPEndPoint localEndPoint)
 		{
-			ArgumentNullException.ThrowIfNull(localEndPoint);
+			if (localEndPoint is null)
+			{
+				throw new ArgumentNullException(nameof(localEndPoint));
+			}
 
 			this.localEndPoint = localEndPoint;
 			udpClient = new UdpClient(localEndPoint);
@@ -24,11 +27,29 @@ namespace Forzoid.Common
 
 		public async IAsyncEnumerable<Packet> ListenAsync([EnumeratorCancellation] CancellationToken cancellationToken)
 		{
+			cancellationToken.Register(udpClient.Close);
+
 			while (disposedValue == false)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 
-				UdpReceiveResult result = await udpClient.ReceiveAsync(cancellationToken).ConfigureAwait(false);
+				UdpReceiveResult result;
+
+				try
+				{
+					result = await udpClient.ReceiveAsync().ConfigureAwait(false);
+				}
+				catch (SocketException socketException)
+				{
+					if (cancellationToken.IsCancellationRequested)
+					{
+						throw new OperationCanceledException("cancellation token called UdpClient.Close", socketException, cancellationToken);
+					}
+					else
+					{
+						throw;
+					}
+				}
 
 				yield return new Packet(result.RemoteEndPoint, localEndPoint, result.Buffer);
 			}

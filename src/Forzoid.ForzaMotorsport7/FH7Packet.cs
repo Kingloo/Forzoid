@@ -12,7 +12,10 @@ namespace Forzoid.ForzaMotorsport7
 
 		public FM7Packet(Packet packet)
 		{
-			ArgumentNullException.ThrowIfNull(packet);
+			if (packet is null)
+			{
+				throw new ArgumentNullException(nameof(packet));
+			}
 
 			RawPacket = packet;
 
