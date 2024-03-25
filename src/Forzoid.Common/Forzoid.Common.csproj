@@ -5,9 +5,9 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.*" />
-		<PackageReference Include="System.Memory" Version="4.5.5" />
-		<PackageReference Include="Nullable" Version="1.3.1">
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.*" /> <!-- IAsyncEnumerable -->
+		<PackageReference Include="System.Memory" Version="4.5.5" /> <!-- ReadOnlySpan -->
+		<PackageReference Include="Nullable" Version="1.3.1"> <!-- nullability attributes e.g. NotNullWhenAttribute -->
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
