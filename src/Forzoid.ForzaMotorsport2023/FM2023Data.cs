@@ -14,9 +14,10 @@ namespace Forzoid.ForzaMotorsport2023
 			{ 2034,	new FM2023Car(2034,	"Ferrari", "LaFerrari", 2013) },
 			{ 2038,	new FM2023Car(2038,	"Alfa Romeo", "4C", 2014) },
 			{ 2103,	new FM2023Car(2103,	"BMW", "#6 M1 Procar", 1979) },
-			{ 2184,	new FM2023Car(2184,	"Ferrari", "458 S", 0) },
+			{ 2184,	new FM2023Car(2184,	"Ferrari", "458 Speciale", 2013) },
 			{ 2968,	new FM2023Car(2968,	"Aston Martin", "Valkyrie", 2023) },
-			{ 3724,	new FM2023Car(3724,	"Ferrari", "296 GTB", 2022) }
+			{ 3724,	new FM2023Car(3724,	"Ferrari", "296 GTB", 2022) },
+			{ 3763,	new FM2023Car(3763,	"BMW", "M2", 2023) }
 		};
 
 		internal readonly static IDictionary<int, FM2023Track> Tracks = new Dictionary<int, FM2023Track>
@@ -44,7 +45,7 @@ namespace Forzoid.ForzaMotorsport2023
 			{ 252,	new FM2023Track(252,	"Hockenheimring", "Short Circuit") },
 			{ 510,	new FM2023Track(510,	"Yas Marina Circuit", "Full Circuit") },
 			{ 511,	new FM2023Track(511,	"Yas Marina Circuit", "North Circuit") },
-			{ 512,	new FM2023Track(512,	"Yas Marina Circuit", "South") },
+			{ 512,	new FM2023Track(512,	"Yas Marina Circuit", "South Circuit") },
 			{ 530,	new FM2023Track(530,	"Circuit de Spa-Francorchamps", "Full Circuit") },
 			{ 840,	new FM2023Track(840,	"Daytona International Speedway", "Sports Car Circuit") },
 			{ 870,	new FM2023Track(870,	"Watkins Glen International Speedway", "Full Circuit") },
